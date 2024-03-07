@@ -44,17 +44,25 @@ public class ForgetPassActivity extends AppCompatActivity {
         btnForgotPass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                firebaseAuth.sendPasswordResetEmail(etUserEmail.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()){
-                            Toast.makeText(ForgetPassActivity.this,"Password send to your email", Toast.LENGTH_SHORT).show();
+                if (etUserEmail.getText().toString().trim() == null)
+                {
+                    firebaseAuth.sendPasswordResetEmail(etUserEmail.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful()){
+                                Toast.makeText(ForgetPassActivity.this,"Password send to your email", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(ForgetPassActivity.this,LoginActivity.class));
+                                finish();
+                            }
+                            else {
+                                Toast.makeText(ForgetPassActivity.this,task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            }
                         }
-                        else {
-                            Toast.makeText(ForgetPassActivity.this,task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+                    });
+                }
+                else {
+                    Toast.makeText(ForgetPassActivity.this,"Enter your email", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

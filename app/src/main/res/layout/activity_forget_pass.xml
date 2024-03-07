@@ -32,7 +32,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="290dp"
         android:gravity="center"
-        android:text="ברוך שובך, שמחים שחזרת"
+        android:text="אל דאגה, אנחנו נחזיר לך את המשתמש!"
         android:textColor="#99000000"
         android:textSize="16sp"/>
 
