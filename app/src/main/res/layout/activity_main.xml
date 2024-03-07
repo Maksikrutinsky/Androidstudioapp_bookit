@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:padding="20dp"
+    tools:context=".MainActivity">
+
+    <ImageView
+        android:id="@+id/iconIv"
+        android:background="@drawable/logo"
+        android:layout_width="161dp"
+        android:layout_height="72dp"
+        android:foregroundGravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"/>
+
+    <ImageView
+        android:background="@drawable/open"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_centerHorizontal="true"
+        android:foregroundGravity="center"
+        android:layout_marginTop="90dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/iconIv"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="300dp"
+        android:gravity="center"
+        android:text="תמיד יש ספר חדש לקוא - הפעם במרחק נגיעה!"
+        android:textColor="#99000000"
+        android:textSize="16sp"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/loginBtn"
+        android:layout_width="300dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="480dp"
+        android:layout_marginRight="33dp"
+        android:background="@drawable/button"
+        android:text="התחבר כעת!"
+        android:textColor="@color/white"
+        android:textStyle="bold"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="550dp"
+        android:layout_marginRight="50dp">
+
+        <TextView
+            android:layout_width="130dp"
+            android:layout_height="30dp"
+            android:text="עדיין לא נרשמת?"
+            android:textColor="#99000000"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/regTV"
+            android:layout_width="130dp"
+            android:layout_height="30dp"
+            android:text="לחץ כאן להרשמה"
+            android:textColor="#8B6499"
+            android:textSize="16sp" />
+
+
+    </LinearLayout>
+
+</RelativeLayout>

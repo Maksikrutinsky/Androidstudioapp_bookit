@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:padding="20dp"
+    tools:context=".RegisterActivity">
+
+
+    <ImageView
+        android:id="@+id/iconIv"
+        android:background="@drawable/logo"
+        android:layout_width="150dp"
+        android:layout_height="65dp"
+        android:foregroundGravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"/>
+
+    <ImageView
+        android:background="@drawable/openregandlogin"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:layout_centerHorizontal="true"
+        android:foregroundGravity="center"
+        android:layout_marginTop="80dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="240dp"
+        android:gravity="center"
+        android:text="בחירה מעולה! בואו להרשם"
+        android:textColor="#99000000"
+        android:textSize="16sp"/>
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_marginTop="280dp"
+        android:layout_marginRight="30dp">
+
+
+        <EditText
+            android:id="@+id/userReg"
+            android:layout_width="350dp"
+            android:layout_height="60dp"
+            android:background="@drawable/bwritingline"
+            android:drawableLeft="@drawable/ic_email"
+            android:drawablePadding="10dp"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:padding="20dp"
+            android:textColorHint="#66000000" />
+
+        <EditText
+            android:id="@+id/passReg"
+            android:layout_width="350dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="60dp"
+            android:background="@drawable/bwritingline"
+            android:drawableLeft="@drawable/ic_pass"
+            android:drawablePadding="10dp"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:padding="20dp"
+            android:textColorHint="#66000000" />
+
+        <EditText
+            android:id="@+id/cpassReg"
+            android:layout_width="350dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="120dp"
+            android:background="@drawable/bwritingline"
+            android:drawableLeft="@drawable/ic_pass"
+            android:drawablePadding="10dp"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:padding="20dp"
+            android:textColorHint="#66000000"/>
+
+        <EditText
+            android:id="@+id/nameReg"
+            android:layout_width="350dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="180dp"
+            android:background="@drawable/bwritingline"
+            android:drawableLeft="@drawable/ic_user"
+            android:drawablePadding="10dp"
+            android:hint="Full Name"
+            android:inputType="textPersonName"
+            android:padding="20dp"
+            android:textColorHint="#66000000"/>
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginTop="530dp"
+        android:layout_marginRight="90dp">
+
+
+        <CheckBox
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:text="אני מאשר כי קראתי את התקנון!"
+            android:gravity="right|center_vertical"/>
+
+        <CheckBox
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:text="אני מאשר לקבל פרסומים במייל"
+            android:gravity="right|center_vertical"
+            android:layout_marginTop="40dp"/>
+
+
+    </RelativeLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/regBtn"
+        android:layout_width="300dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="635dp"
+        android:layout_marginRight="50dp"
+        android:background="@drawable/button"
+        android:text="הרשמה"
+        android:textColor="@color/white"
+        android:textStyle="bold"/>
+
+</RelativeLayout>
