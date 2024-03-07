@@ -15,6 +15,12 @@
         android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
         tools:targetApi="31">
         <activity
+            android:name=".MainActivity2xghdgfhdf"
+            android:exported="false" />
+        <activity
+            android:name=".DashboardLibrarianActivity"
+            android:exported="false" />
+        <activity
             android:name=".CategoryAddActivity"
             android:exported="false" />
         <activity

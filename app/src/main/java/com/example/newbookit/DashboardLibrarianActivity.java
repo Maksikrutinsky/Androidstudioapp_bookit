@@ -15,31 +15,30 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class DashboardAdminActivity extends AppCompatActivity {
+public class DashboardLibrarianActivity extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
-    TextView subTitleTv;
-    ImageButton logoutBtn;
+    TextView subTitleTvLib;
+    ImageButton logoutBtnLib;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dashboard_admin);
+        setContentView(R.layout.activity_dashboard_librarian);
 
 
-        subTitleTv = (TextView)findViewById(R.id.subTitleTv);
-        logoutBtn = (ImageButton)findViewById(R.id.logoutBtn);
+        subTitleTvLib = (TextView)findViewById(R.id.subTitleTvLib);
+        logoutBtnLib = (ImageButton)findViewById(R.id.logoutBtnLib);
         firebaseAuth = FirebaseAuth.getInstance();
         checkUser();
 
-        logoutBtn.setOnClickListener(new View.OnClickListener() {
+        logoutBtnLib.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 firebaseAuth.signOut();
                 checkUser();
             }
         });
-
 
     }
 
@@ -51,7 +50,8 @@ public class DashboardAdminActivity extends AppCompatActivity {
         }
         else {
             String email = firebaseUser.getEmail();
-            subTitleTv.setText(email);
+            subTitleTvLib.setText(email);
         }
     }
+
 }

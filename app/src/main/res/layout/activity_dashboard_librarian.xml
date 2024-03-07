@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
-    tools:context=".DashboardUserActivity">
+    tools:context=".DashboardLibrarianActivity">
 
 
     <RelativeLayout
@@ -22,12 +22,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_centerHorizontal="true"
-            android:text="Dashboard User"
+            android:text="Dashboard Librarian"
             android:textColor="@color/white"
             android:textStyle="bold"/>
 
         <TextView
-            android:id="@+id/subTitleTv"
+            android:id="@+id/subTitleTvLib"
             android:layout_below="@+id/titleTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -37,7 +37,7 @@
             android:textColor="@color/white"/>
 
         <ImageButton
-            android:id="@+id/logoutBtn"
+            android:id="@+id/logoutBtnLib"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"

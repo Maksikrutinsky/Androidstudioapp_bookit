@@ -123,6 +123,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     startActivity(new Intent(LoginActivity.this, DashboardAdminActivity.class));
                     finish();
                 }
+                else if(userType.equals("librarion")){
+                    startActivity(new Intent(LoginActivity.this, DashboardLibrarianActivity.class));
+                    finish();
+                }
             }
 
             @Override
