@@ -78,7 +78,7 @@
 
 
         <CheckBox
-            android:layout_width="300dp"
+            android:layout_width="250dp"
             android:layout_height="50dp"
             android:text="זכור אותי!"
             android:gravity="right|center_vertical"/>
