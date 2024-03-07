@@ -8,6 +8,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -37,6 +38,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     Button loginBtn;
 
     EditText userLogin, passLogin;
+    TextView textForgetPass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         loginBtn = (Button)findViewById(R.id.loginBtn);
         userLogin = (EditText) findViewById(R.id.userLogin);
         passLogin = (EditText) findViewById(R.id.passLogin);
+        textForgetPass = (TextView) findViewById(R.id.textForgetPass);
 
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -55,6 +58,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 
         loginBtn.setOnClickListener(this);
+        textForgetPass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(v == textForgetPass){
+                    startActivity(new Intent(LoginActivity.this, ForgetPassActivity.class));
+                    finish();
+                }
+            }
+        });
 
 
 
