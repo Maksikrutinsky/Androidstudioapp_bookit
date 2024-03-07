@@ -5,12 +5,12 @@ import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 
 import org.junit.Test;
 
 public class LoginActivityTest {
-
 
     @Test
     public void testCheckUser_User() {
@@ -33,9 +33,6 @@ public class LoginActivityTest {
         return userType != null ? userType : "";
     }
 
-
-
-
     @Test
     public void validateData_InvalidEmail_ShowToast() {
         LoginActivity activity = new LoginActivity();
@@ -45,5 +42,4 @@ public class LoginActivityTest {
         assertFalse(activity.validateData());
 
     }
-
 }
