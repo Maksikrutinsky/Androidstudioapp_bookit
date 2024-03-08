@@ -30,7 +30,7 @@
             android:name=".DashboardUserActivity"
             android:exported="false" />
         <activity
-            android:name=".SplashActivity"
+            android:name=".DashboardAdminActivity"
             android:exported="false" />
         <activity
             android:name=".RegisterActivity"
@@ -42,7 +42,7 @@
             android:name=".MainActivity"
             android:exported="false" />
         <activity
-            android:name=".DashboardAdminActivity"
+            android:name=".SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
