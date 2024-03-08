@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".CategoryAddActivity">
 
-
+<!--Yes Boss-->
     <RelativeLayout
         android:id="@+id/relativeLayout2"
         android:layout_width="404dp"
