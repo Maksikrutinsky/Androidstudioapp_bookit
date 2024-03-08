@@ -3,6 +3,7 @@ package com.example.newbookit;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -21,6 +22,10 @@ public class DashboardAdminActivity extends AppCompatActivity {
     TextView subTitleTv;
     ImageButton logoutBtn;
 
+    Button addCategoryBtn;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +34,7 @@ public class DashboardAdminActivity extends AppCompatActivity {
 
         subTitleTv = (TextView)findViewById(R.id.subTitleTv);
         logoutBtn = (ImageButton)findViewById(R.id.logoutBtn);
+        addCategoryBtn = (Button)findViewById(R.id.addCategoryBtn);
         firebaseAuth = FirebaseAuth.getInstance();
         checkUser();
 
@@ -39,7 +45,13 @@ public class DashboardAdminActivity extends AppCompatActivity {
                 checkUser();
             }
         });
-
+        //handle Click,start Book add screen
+        addCategoryBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(DashboardAdminActivity.this,CategoryAddActivity.class));
+            }
+        });
 
     }
 

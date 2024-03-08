@@ -48,4 +48,47 @@
 
     </RelativeLayout>
 
+    <LinearLayout
+        android:id="@+id/bottomB"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal">
+
+
+
+    <Button
+        android:id="@+id/addCategoryBtn"
+        android:layout_width="302dp"
+        android:layout_height="64dp"
+        android:layout_above="@+id/bottomB"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="550dp"
+        android:layout_marginEnd="22dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="-11dp"
+        android:layout_toStartOf="@+id/addP"
+        android:layout_weight="1"
+        android:background="@drawable/shape_toolbar02"
+        android:text="הוספת ספר+"
+        android:textColor="@color/white" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="550dp"
+        android:layout_marginEnd="11dp"
+        android:layout_marginBottom="7dp"
+        android:src="@drawable/file_photo"
+        app:tint="@android:color/white"
+        android:backgroundTint="@color/purple"
+        tools:srcCompat="@tools:sample/backgrounds/scenic" />
+    </LinearLayout>
 </RelativeLayout>

@@ -15,6 +15,9 @@
         android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
         tools:targetApi="31">
         <activity
+            android:name=".userprofileActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity2xghdgfhdf"
             android:exported="false" />
         <activity
@@ -27,7 +30,7 @@
             android:name=".DashboardUserActivity"
             android:exported="false" />
         <activity
-            android:name=".DashboardAdminActivity"
+            android:name=".SplashActivity"
             android:exported="false" />
         <activity
             android:name=".RegisterActivity"
@@ -39,7 +42,7 @@
             android:name=".MainActivity"
             android:exported="false" />
         <activity
-            android:name=".SplashActivity"
+            android:name=".DashboardAdminActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
