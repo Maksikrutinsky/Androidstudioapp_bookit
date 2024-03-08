@@ -18,7 +18,7 @@
             android:name=".userprofileActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity2xghdgfhdf"
+            android:name=".ForgetPassActivity"
             android:exported="false" />
         <activity
             android:name=".DashboardLibrarianActivity"

@@ -8,14 +8,11 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -37,6 +34,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     Button loginBtn;
 
     EditText userLogin, passLogin;
+    TextView textForgetPass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +44,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         loginBtn = (Button)findViewById(R.id.loginBtn);
         userLogin = (EditText) findViewById(R.id.userLogin);
         passLogin = (EditText) findViewById(R.id.passLogin);
+        textForgetPass = (TextView) findViewById(R.id.textForgetPass);
 
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -55,6 +54,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 
         loginBtn.setOnClickListener(this);
+        textForgetPass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(v == textForgetPass){
+                    startActivity(new Intent(LoginActivity.this, ForgetPassActivity.class));
+                    finish();
+                }
+            }
+        });
 
 
 
@@ -66,7 +74,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private String email = "", password = "";
-    private void validateData() {
+    public boolean validateData() {
 
         email = userLogin.getText().toString().trim();
         password = passLogin.getText().toString().trim();
@@ -80,6 +88,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         else {
             loginUser();
         }
+        return false;
     }
 
     private void loginUser() {
@@ -103,7 +112,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         });
     }
 
-    private void checkUser() {
+    public void checkUser() {
 
         progressDialog.setMessage("Checking User");
 
@@ -135,5 +144,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         });
     }
+
 
 }
