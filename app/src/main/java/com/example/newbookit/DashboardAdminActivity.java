@@ -25,6 +25,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 
 import java.util.ArrayList;
 
@@ -36,6 +38,7 @@ public class DashboardAdminActivity extends AppCompatActivity {
      EditText searchEt;
     Button addCategoryBtn;
     RecyclerView categoriesRv;
+    FloatingActionButton addPdfFab;
 //arrayList to store category
     private ArrayList<ModelCaegory> categoryArrayList;
     private AdapterCategory adapterCategory;
@@ -43,6 +46,10 @@ public class DashboardAdminActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard_admin);
+//        super.onCreate(savedInstanceState);
+//        View rootView = new View(this);
+//        setContentView(rootView);
+
 
         searchEt = (EditText)findViewById(R.id.searchEt);
         subTitleTv = (TextView)findViewById(R.id.subTitleTv);
@@ -50,7 +57,9 @@ public class DashboardAdminActivity extends AppCompatActivity {
         addCategoryBtn = (Button)findViewById(R.id.addCategoryBtn);
         firebaseAuth = FirebaseAuth.getInstance();
         categoriesRv = (RecyclerView)findViewById(R.id.CategoriesRv);
+        addPdfFab = (FloatingActionButton)findViewById(R.id.addP);
         checkUser();
+        loadCategories();
 
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,6 +107,14 @@ public class DashboardAdminActivity extends AppCompatActivity {
                 startActivity(new Intent(DashboardAdminActivity.this,CategoryAddActivity.class));
             }
         });
+          //handle Click,Start PDF add Screen
+        addPdfFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent( DashboardAdminActivity.this,PDFaddActivity.class));
+            }
+        });
+
 
     }
     private void loadCategories() {
@@ -111,7 +128,8 @@ public class DashboardAdminActivity extends AppCompatActivity {
 
                //clear arraylist before adding data into it;
                 categoryArrayList.clear();
-                for(DataSnapshot ds:snapshot.getChildren()){
+                for(DataSnapshot ds:snapshot.getChildren())
+                {
                     //get data
                     ModelCaegory model= ds.getValue(ModelCaegory.class);
 

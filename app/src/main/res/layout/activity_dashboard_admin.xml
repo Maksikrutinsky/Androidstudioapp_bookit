@@ -105,7 +105,7 @@
             android:layout_toStartOf="@+id/addP"
             android:layout_weight="1"
             android:background="@drawable/shape_toolbar02"
-            android:text="הוספת ספר+"
+            android:text="הוספת קטגוריה+"
             android:textColor="@color/white" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
