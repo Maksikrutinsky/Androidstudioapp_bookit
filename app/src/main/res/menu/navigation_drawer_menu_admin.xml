@@ -12,6 +12,16 @@
             android:icon="@drawable/ic_baseline_home_24"
             android:title="הוספת ספר"/>
 
+        <item
+            android:id="@+id/nav_adminNav1"
+            android:icon="@drawable/ic_baseline_home_24"
+            android:title="כרטיסה של אדמין"/>
+
+        <item
+            android:id="@+id/nav_adminNav2"
+            android:icon="@drawable/ic_baseline_home_24"
+            android:title="כרטיסה של אדמין"/>
+
 
 
     </group>

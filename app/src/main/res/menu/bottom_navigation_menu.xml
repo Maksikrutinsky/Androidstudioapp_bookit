@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/bottom_home"
-        android:title="התנתקות"
+        android:title="דף הבית"
         android:icon="@drawable/ic_baseline_home_24"/>
 
     <item
@@ -21,8 +21,9 @@
         android:icon="@drawable/ic_baseline_home_24"/>
 
     <item
-        android:id="@+id/bottom_library"
-        android:title="דף הבית"
+        android:id="@+id/bottom_exit"
+        android:title="התנתקות"
         android:icon="@drawable/ic_baseline_home_24"/>
+
 
 </menu>

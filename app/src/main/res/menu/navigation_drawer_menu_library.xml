@@ -12,6 +12,11 @@
             android:icon="@drawable/ic_baseline_home_24"
             android:title="הוספת ספר"/>
 
+        <item
+            android:id="@+id/nav_LibNav"
+            android:icon="@drawable/ic_baseline_home_24"
+            android:title="כרטיסה של ספרן"/>
+
 
 
     </group>

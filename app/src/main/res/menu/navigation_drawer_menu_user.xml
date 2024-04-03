@@ -13,19 +13,14 @@
             android:title="תנאי שימוש"/>
 
         <item
-            android:id="@+id/nav_music"
+            android:id="@+id/nav_searchBook"
             android:icon="@drawable/ic_baseline_home_24"
             android:title="חיפוש ספרים"/>
 
         <item
-            android:id="@+id/nav_gaming"
+            android:id="@+id/nav_bookLove"
             android:icon="@drawable/ic_baseline_home_24"
             android:title="ספרים שאהבתי"/>
-
-        <item
-            android:id="@+id/nav_movies"
-            android:icon="@drawable/ic_baseline_home_24"
-            android:title="ההשאלות שלי"/>
 
     </group>
 

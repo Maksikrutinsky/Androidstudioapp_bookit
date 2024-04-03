@@ -140,12 +140,17 @@ public class LoginActivity extends AppCompatActivity {
                         //check user type
                         if (userType.equals("user")){
                             //this is simple user, open user dashboard
-                            startActivity(new Intent(LoginActivity.this, HomescreenActivity.class));
+                            startActivity(new Intent(LoginActivity.this, DashboardUserActivity.class));
                             finish();
                         }
                         else if (userType.equals("admin")){
                             //this is admin, open admin dashboard
                             startActivity(new Intent(LoginActivity.this, HomescreenActivity.class));
+                            finish();
+                        }
+                        else if (userType.equals("lib")){
+                            //this is admin, open admin dashboard
+                            startActivity(new Intent(LoginActivity.this, DashboardLibActivity.class));
                             finish();
                         }
                     }

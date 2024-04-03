@@ -1,193 +1,165 @@
 package com.technifysoft.bookapp.activities;
 
+import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-
-import android.content.Context;
+import androidx.fragment.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.widget.Toolbar;
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.graphics.Insets;
+import androidx.core.view.GravityCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.navigation.NavigationView;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.technifysoft.bookapp.BooksUserFragment;
-import com.technifysoft.bookapp.databinding.ActivityDashboardUserBinding;
-import com.technifysoft.bookapp.models.ModelCategory;
+import com.technifysoft.bookapp.R;
 
-import java.util.ArrayList;
 
-public class DashboardUserActivity extends AppCompatActivity {
 
-    //to show in tabs
-    public ArrayList<ModelCategory> categoryArrayList;
-    public ViewPagerAdapter viewPagerAdapter;
+public class DashboardUserActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener {
 
-    //view binding
-    private ActivityDashboardUserBinding binding;
 
-    //firebase auth
+
+    DrawerLayout drawerLayout;
+    BottomNavigationView bottomNavigationView;
+    FragmentManager fragmentManager;
+    Toolbar toolbar;
+    FloatingActionButton fab;
     private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityDashboardUserBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        setContentView(R.layout.activity_dashboard_user);
 
-        //init firebase auth
+
         firebaseAuth = FirebaseAuth.getInstance();
-        checkUser();
+        fab = findViewById(R.id.fab);
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        setupViewPagerAdapter(binding.viewPager);
-        binding.tabLayout.setupWithViewPager(binding.viewPager);
+        drawerLayout = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout,toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
 
-        //handle click, logout
-        binding.logoutBtn.setOnClickListener(new View.OnClickListener() {
+        NavigationView navigationView = findViewById(R.id.navigation_drawer);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setBackground(null);
+
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int itemId = item.getItemId();
+                if (itemId == R.id.bottom_exit){
+                    firebaseAuth.signOut();
+                    checkUser();
+                } else if (itemId == R.id.bottom_short){
+                    openFragment(new HomeFragment());
+                    return true;
+                } else if (itemId == R.id.bottom_subscription){
+                    openFragment(new HomeFragment());
+                    return true;
+                } else if (itemId == R.id.bottom_home){
+                    startActivity(new Intent(DashboardUserActivity.this, DashboardUserActivity.class));
+                    finish();
+                }
+                return false;
+            }
+        });
+
+
+
+        fragmentManager = getSupportFragmentManager();
+        openFragment(new HomeFragment());
+
+
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                firebaseAuth.signOut();
-                startActivity(new Intent(DashboardUserActivity.this, MainActivity.class));
-                finish();
+                startActivity(new Intent(DashboardUserActivity.this,ProfileActivity.class));
+                Toast.makeText(DashboardUserActivity.this, "Profile", Toast.LENGTH_SHORT).show();
             }
         });
-
-        //handle click, open profile
-        binding.profileBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(DashboardUserActivity.this, ProfileActivity.class));
-            }
-        });
-    }
-
-    private void setupViewPagerAdapter(ViewPager viewPager){
-        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, this);
-
-        categoryArrayList = new ArrayList<>();
-
-        //load categories from firebase
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Categories"); //be careful of spellings
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                //clear before adding to list
-                categoryArrayList.clear();
-
-                /*Load Categories - Static e.g. All, Most Viewed, Most Downloaded*/
-                //Add data to models
-                ModelCategory modelAll = new ModelCategory("01", "All", "", 1);
-                ModelCategory modelMostViewed = new ModelCategory("02", "Most Viewed", "", 1);
-                ModelCategory modelMostDownloaded = new ModelCategory("03", "Most Downloaded", "", 1);
-                //add models to list
-                categoryArrayList.add(modelAll);
-                categoryArrayList.add(modelMostViewed);
-                categoryArrayList.add(modelMostDownloaded);
-                //add data to view pager adapter
-                viewPagerAdapter.addFragment(BooksUserFragment.newInstance(
-                        ""+modelAll.getId(),
-                        ""+modelAll.getCategory(),
-                        ""+modelAll.getUid()
-                ), modelAll.getCategory());
-                viewPagerAdapter.addFragment(BooksUserFragment.newInstance(
-                        ""+modelMostViewed.getId(),
-                        ""+modelMostViewed.getCategory(),
-                        ""+modelMostViewed.getUid()
-                ), modelMostViewed.getCategory());
-                viewPagerAdapter.addFragment(BooksUserFragment.newInstance(
-                        ""+modelMostDownloaded.getId(),
-                        ""+modelMostDownloaded.getCategory(),
-                        ""+modelMostDownloaded.getUid()
-                ), modelMostDownloaded.getCategory());
-                //refresh list
-                viewPagerAdapter.notifyDataSetChanged();
-
-                //Now Load from firebase
-                for (DataSnapshot ds: snapshot.getChildren()){
-                    //get data
-                    ModelCategory model = ds.getValue(ModelCategory.class);
-                    //add data to list
-                    categoryArrayList.add(model);
-                    //add data to viewPagerAdapter
-                    viewPagerAdapter.addFragment(BooksUserFragment.newInstance(
-                            ""+model.getId(),
-                            ""+model.getCategory(),
-                            ""+model.getUid()), model.getCategory());
-                    //refresh list
-                    viewPagerAdapter.notifyDataSetChanged();
-                }
-
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-
-            }
-        });
-
-        //set adapter to view pager
-        viewPager.setAdapter(viewPagerAdapter);
-
-    }
-
-    public class ViewPagerAdapter extends FragmentPagerAdapter{
-
-        private ArrayList<BooksUserFragment> fragmentList = new ArrayList<>();
-        private ArrayList<String> fragmentTitleList = new ArrayList<>();
-        private Context context;
-
-        public ViewPagerAdapter( FragmentManager fm, int behavior, Context context) {
-            super(fm, behavior);
-            this.context = context;
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return fragmentList.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return fragmentList.size();
-        }
-
-        private void addFragment(BooksUserFragment fragment, String title){
-            //add fragment passed as parameter in fragmentList
-            fragmentList.add(fragment);
-            //add title passed as parameter in fragmentTitleList
-            fragmentTitleList.add(title);
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return fragmentTitleList.get(position);
-        }
     }
 
 
     private void checkUser() {
-        //get current user
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-        if (firebaseUser==null){
-            //not logged in
-            binding.subTitleTv.setText("Not Logged In");
-        }
-        else {
-            //logged in, get user info
-            String email = firebaseUser.getEmail();
-            //set in textview of toolbar
-            binding.subTitleTv.setText(email);
+        if(firebaseUser == null){
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
         }
     }
+
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.nav_trending){
+            Toast.makeText(this, "דף תנאי שימוש", Toast.LENGTH_SHORT).show();
+        } else if( itemId == R.id.nav_searchBook) {
+            Toast.makeText(this, "חיפוש ספרים", Toast.LENGTH_SHORT).show();
+        } else if( itemId == R.id.nav_bookLove) {
+            Toast.makeText(this, "ספרים שאהבתי", Toast.LENGTH_SHORT).show();
+        }
+
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    private void openFragment(Fragment fragment){
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment);
+        transaction.commit();
+    }
+
+
 
 }

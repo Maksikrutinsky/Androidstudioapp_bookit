@@ -10,6 +10,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -51,7 +53,7 @@ import com.technifysoft.bookapp.R;
 
 
 
-public class HomescreenActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener {
+public class DashboardLibActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener {
 
 
 
@@ -62,10 +64,11 @@ public class HomescreenActivity extends AppCompatActivity  implements Navigation
     FloatingActionButton fab;
     private FirebaseAuth firebaseAuth;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_homescreen);
+        setContentView(R.layout.activity_dashboard_lib);
 
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -98,7 +101,7 @@ public class HomescreenActivity extends AppCompatActivity  implements Navigation
                     openFragment(new HomeFragment());
                     return true;
                 } else if (itemId == R.id.bottom_home){
-                    startActivity(new Intent(HomescreenActivity.this, HomescreenActivity.class));
+                    startActivity(new Intent(DashboardLibActivity.this, DashboardUserActivity.class));
                     finish();
                 }
                 return false;
@@ -114,8 +117,8 @@ public class HomescreenActivity extends AppCompatActivity  implements Navigation
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(HomescreenActivity.this,ProfileActivity.class));
-                Toast.makeText(HomescreenActivity.this, "Profile", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(DashboardLibActivity.this,ProfileActivity.class));
+                Toast.makeText(DashboardLibActivity.this, "Profile", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -134,12 +137,9 @@ public class HomescreenActivity extends AppCompatActivity  implements Navigation
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.nav_addBook){
-            startActivity(new Intent(HomescreenActivity.this, DashboardAdminActivity.class));
-            finish();
-        } else if( itemId == R.id.nav_adminNav1) {
-            // add page
-        } else if( itemId == R.id.nav_adminNav2) {
-            // add page
+            Toast.makeText(this, "סתם משהו של ספרן", Toast.LENGTH_SHORT).show();
+        } else if( itemId == R.id.nav_LibNav) {
+            Toast.makeText(this, "סתם משהו של ספרן", Toast.LENGTH_SHORT).show();
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
