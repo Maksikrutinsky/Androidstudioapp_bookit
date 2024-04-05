@@ -15,12 +15,12 @@
         <item
             android:id="@+id/nav_searchBook"
             android:icon="@drawable/ic_baseline_home_24"
-            android:title="חיפוש ספרים"/>
+            android:title="חיפוש ספר"/>
 
         <item
-            android:id="@+id/nav_bookLove"
+            android:id="@+id/nav_Reporting"
             android:icon="@drawable/ic_baseline_home_24"
-            android:title="ספרים שאהבתי"/>
+            android:title="דיווח תקלות"/>
 
     </group>
 

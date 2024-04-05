@@ -13,9 +13,14 @@
             android:title="הוספת ספר"/>
 
         <item
-            android:id="@+id/nav_LibNav"
+            android:id="@+id/nav_LibNav1"
             android:icon="@drawable/ic_baseline_home_24"
-            android:title="כרטיסה של ספרן"/>
+            android:title="חיפוש ספר"/>
+
+        <item
+            android:id="@+id/nav_LibNav2"
+            android:icon="@drawable/ic_baseline_home_24"
+            android:title="הוספת ספר"/>
 
 
 
