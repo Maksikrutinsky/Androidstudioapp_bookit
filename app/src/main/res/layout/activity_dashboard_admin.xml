@@ -30,7 +30,7 @@
             android:layout_marginTop="8dp"
             android:layout_centerHorizontal="true"
             android:layout_height="wrap_content"
-            android:text="Dashboard Admin"
+            android:text="לוח האדמין"
             android:textStyle="bold"
             android:textColor="@color/white"/>
 
@@ -61,7 +61,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbarRl"
-        android:hint="Search"
+        android:hint="חיפוש"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginTop="10dp"
@@ -96,7 +96,7 @@
             android:id="@+id/addCategoryBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="+ Add Category"
+            android:text="+ הוסף קטגוריה"
             android:layout_weight="1"
             android:layout_marginEnd="10dp"
             android:background="@drawable/shape_button01"
