@@ -16,13 +16,13 @@ import com.technifysoft.bookapp.databinding.ActivityForgotPasswordBinding;
 
 public class ForgotPasswordActivity extends AppCompatActivity {
 
-    //View binding
+    // קישורים לממשק המשתמש
     private ActivityForgotPasswordBinding binding;
 
-    //firebase auth
+    // אותנטיקציה של Firebase
     private FirebaseAuth firebaseAuth;
 
-    //progress dialog
+    // דיאלוג התקדמות
     private ProgressDialog progressDialog;
 
     @Override
@@ -31,15 +31,15 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         binding = ActivityForgotPasswordBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        //init firebase auth
+        // אתחול Firebase Auth
         firebaseAuth = FirebaseAuth.getInstance();
 
-        //init/setup progress dialog
+        // הגדרה ואתחול של דיאלוג התקדמות
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Please wait");
         progressDialog.setCanceledOnTouchOutside(false);
 
-        //handle click, go back
+        // טיפול בלחיצה, חזרה אחורה
         binding.backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -47,7 +47,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             }
         });
 
-        //handle click, begin recovery password
+        // טיפול בלחיצה, התחלת שחזור סיסמה
         binding.submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,14 +58,14 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
     private String email = "";
     private void validateData() {
-        //get data i.e. email
+        // קבלת הנתונים, כלומר האימייל
         email = binding.emailEt.getText().toString().trim();
 
-        //validate data e.g. shouldn't empty and should be valid format
+        // אימות הנתונים, צריך להיות מלא ובפורמט חוקי
         if (email.isEmpty()){
             Toast.makeText(this, "Enter Email...", Toast.LENGTH_SHORT).show();
         }
-        else  if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+        else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
             Toast.makeText(this, "Invalid email format...", Toast.LENGTH_SHORT).show();
         }
         else {
@@ -74,28 +74,27 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     }
 
     private void recoverPassword() {
-        //show progress
-        progressDialog.setMessage("Sending password recovery instructions to "+email);
+        // הצגת התקדמות
+        progressDialog.setMessage("Sending password recovery instructions to " + email);
         progressDialog.show();
 
-        //begin sending recovery
+        // התחלת השחזור
         firebaseAuth.sendPasswordResetEmail(email)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        //sent
+                        // הודעת הצלחה
                         progressDialog.dismiss();
-                        Toast.makeText(ForgotPasswordActivity.this, "Instructions to reset password sent to "+email, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ForgotPasswordActivity.this, "Instructions to reset password sent to " + email, Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        //failed to send
+                        // הודעת כישלון
                         progressDialog.dismiss();
-                        Toast.makeText(ForgotPasswordActivity.this, "Failed to send due to "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ForgotPasswordActivity.this, "Failed to send due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
-
 }

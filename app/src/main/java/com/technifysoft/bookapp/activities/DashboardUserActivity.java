@@ -24,12 +24,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.technifysoft.bookapp.R;
 
-
-
 public class DashboardUserActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener {
 
-
-
+    // הגדרת משתנים לרכיבי הממשק ואותנטיקציה
     DrawerLayout drawerLayout;
     BottomNavigationView bottomNavigationView;
     FragmentManager fragmentManager;
@@ -42,14 +39,14 @@ public class DashboardUserActivity extends AppCompatActivity  implements Navigat
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard_user);
 
-
+        // אתחול Firebase Auth וקישור רכיבי הממשק
         firebaseAuth = FirebaseAuth.getInstance();
         fab = findViewById(R.id.fab);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         drawerLayout = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout,toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -59,68 +56,71 @@ public class DashboardUserActivity extends AppCompatActivity  implements Navigat
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setBackground(null);
 
+        // טיפול באירועים של התפריט התחתון
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int itemId = item.getItemId();
-                if (itemId == R.id.bottom_exit){
-                    firebaseAuth.signOut();
-                    checkUser();
-                } else if (itemId == R.id.bottom_short){
-                    openFragment(new HomeFragment());
-                    return true;
-                } else if (itemId == R.id.bottom_subscription){
-                    openFragment(new HomeFragment());
-                    return true;
-                } else if (itemId == R.id.bottom_home){
-                    startActivity(new Intent(DashboardUserActivity.this, DashboardUserActivity.class));
-                    finish();
+                switch (item.getItemId()) {
+                    case R.id.bottom_exit:
+                        firebaseAuth.signOut();
+                        checkUser();
+                        break;
+                    case R.id.bottom_short:
+                    case R.id.bottom_subscription:
+                        openFragment(new HomeFragment());
+                        return true;
+                    case R.id.bottom_home:
+                        startActivity(new Intent(DashboardUserActivity.this, DashboardUserActivity.class));
+                        finish();
+                        break;
                 }
                 return false;
             }
         });
 
-
-
         fragmentManager = getSupportFragmentManager();
         openFragment(new HomeFragment());
 
-
+        // כפתור פעולה מהירה לפרופיל
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(DashboardUserActivity.this,ProfileActivity.class));
+                startActivity(new Intent(DashboardUserActivity.this, ProfileActivity.class));
                 Toast.makeText(DashboardUserActivity.this, "Profile", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-
+    // בדיקת מצב המשתמש
     private void checkUser() {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-        if(firebaseUser == null){
+        if (firebaseUser == null) {
             startActivity(new Intent(this, MainActivity.class));
             finish();
         }
     }
 
-
+    // טיפול באירועים של תפריט הניווט
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        int itemId = item.getItemId();
-        if (itemId == R.id.nav_trending){
-            Toast.makeText(this, "דף תנאי שימוש", Toast.LENGTH_SHORT).show();
-        } else if( itemId == R.id.nav_searchBook) {
-            Toast.makeText(this, "חיפוש ספרים", Toast.LENGTH_SHORT).show();
-        } else if( itemId == R.id.nav_Reporting) {
-            startActivity(new Intent(this, ErrorActivity.class));
-            finish();
+        switch (item.getItemId()) {
+            case R.id.nav_trending:
+                Toast.makeText(this, "דף תנאי שימוש", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.nav_searchBook:
+                Toast.makeText(this, "חיפוש ספרים", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.nav_Reporting:
+                startActivity(new Intent(this, ErrorActivity.class));
+                finish();
+                break;
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
 
+    // טיפול בלחיצת חזור
     @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -130,12 +130,10 @@ public class DashboardUserActivity extends AppCompatActivity  implements Navigat
         }
     }
 
-    private void openFragment(Fragment fragment){
+    // פתיחת פרגמנט במסך
+    private void openFragment(Fragment fragment) {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
         transaction.commit();
     }
-
-
-
 }

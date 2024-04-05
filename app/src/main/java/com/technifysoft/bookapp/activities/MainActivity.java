@@ -1,7 +1,6 @@
 package com.technifysoft.bookapp.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,29 +9,20 @@ import com.technifysoft.bookapp.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
-    //view binding
+    // קישור ישיר לאלמנטים בממשק המשתמש
     private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // הגדרת התצוגה של הממשק המשתמש דרך ה-view binding
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        //handle loginBtn click, start login screen
-        binding.loginBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
-            }
-        });
+        // טיפול בלחיצה על כפתור הכניסה, פתיחת מסך הכניסה
+        binding.loginBtn.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, LoginActivity.class)));
 
-        //handle skipBtn click,  register
-        binding.regTV2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, RegisterActivity.class));
-            }
-        });
+        // טיפול בלחיצה על הטקסט להרשמה, פתיחת מסך ההרשמה
+        binding.regTV2.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, RegisterActivity.class)));
     }
 }

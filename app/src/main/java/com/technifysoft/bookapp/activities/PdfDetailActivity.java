@@ -42,24 +42,27 @@ import java.util.HashMap;
 
 public class PdfDetailActivity extends AppCompatActivity {
 
-    //view binding
+    // הגדרת תיבת הטקסט ושאר המאפיינים של הפעילות
     private ActivityPdfDetailBinding binding;
 
-    //pdf id, get from intent
+    // מזהה הספר, מתקבל מהintent
     String bookId, bookTitle, bookUrl;
 
+    // האם הספר ברשימת המועדפים שלי
     boolean isInMyFavorite = false;
 
     private FirebaseAuth firebaseAuth;
 
+    // תגית לdebugging
     private static final String TAG_DOWNLOAD = "DOWNLOAD_TAG";
 
-    //progress dialog
+    // תיבת ההתקדמות
     private ProgressDialog progressDialog;
 
-    //arraylist to hold comments
+    // רשימת התגובות
     private ArrayList<ModelComment> commentArrayList;
-    //adapter to set to recyclerview
+
+    // מתאם להצגת תגובות ב-RecyclerView
     private AdapterComment adapterComment;
 
     @Override
@@ -68,14 +71,14 @@ public class PdfDetailActivity extends AppCompatActivity {
         binding = ActivityPdfDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        //get data from intent e.g. bookId
+        // קבלת הנתונים מintent כמו bookId
         Intent intent = getIntent();
         bookId = intent.getStringExtra("bookId");
 
-        //at start hide download button, because we need book url that we will load later in function loadBookDetails();
+        // בתחילה הסתרת כפתור ההורדה, כי נצטרך את כתובת הספר שנטען מאוחר יותר בפונקציה loadBookDetails();
         binding.downloadBookBtn.setVisibility(View.GONE);
 
-        //init progress dialog
+        // התחלת תיבת ההתקדמות
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Please wait");
         progressDialog.setCanceledOnTouchOutside(false);
@@ -85,14 +88,13 @@ public class PdfDetailActivity extends AppCompatActivity {
             checkIsFavorite();
         }
 
+        // טעינת פרטי הספר והתגובות
         loadBookDetails();
         loadComments();
-        //increment book view count, whenever this page starts
+        // הגדלת מספר הצפיות בספר בכל פעם שהדף מתחיל
         MyApplication.incrementBookViewCount(bookId);
 
-
-
-        //handle click, goback
+        // התנהגות לחיצה על כפתור "חזור"
         binding.backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,7 +102,7 @@ public class PdfDetailActivity extends AppCompatActivity {
             }
         });
 
-        //handle click, open to view pdf
+        // התנהגות לחיצה על כפתור "קרא"
         binding.readBookBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,7 +112,7 @@ public class PdfDetailActivity extends AppCompatActivity {
             }
         });
 
-        //handle click, download pdf
+        // התנהגות לחיצה על כפתור "הורד"
         binding.downloadBookBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,7 +132,7 @@ public class PdfDetailActivity extends AppCompatActivity {
             }
         });
 
-        //handle click, add/remove favorite
+        // התנהגות לחיצה על כפתור הוספת/הסרת מועדפים
         binding.favoriteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -139,22 +141,22 @@ public class PdfDetailActivity extends AppCompatActivity {
                 }
                 else {
                     if (isInMyFavorite){
-                        //in favorite, remove from favorite
+                        // במועדפים, להסר מהמועדפים
                         MyApplication.removeFromFavorite(PdfDetailActivity.this, bookId);
                     }
                     else {
-                        //not in favorite, add to favorite
+                        // לא במועדפים, להוסיף למועדפים
                         MyApplication.addToFavorite(PdfDetailActivity.this, bookId);
                     }
                 }
             }
         });
 
-        //handle click, show comment add dialog
+        // התנהגות לחיצה על כפתור הוספת תגובה
         binding.addCommentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*Requirements: User must be logged in to add comment*/
+                /*דרישות: משתמש חייב להיות מחובר כדי להוסיף תגובה*/
                 if (firebaseAuth.getCurrentUser() == null){
                     Toast.makeText(PdfDetailActivity.this, "You're not logged in...", Toast.LENGTH_SHORT).show();
                 }
@@ -163,32 +165,30 @@ public class PdfDetailActivity extends AppCompatActivity {
                 }
             }
         });
-
-
-
     }
 
+    // טעינת התגובות ממסד הנתונים
     private void loadComments() {
-        //init arraylist before adding data into it
+        // איתחול של הרשימה לפני הוספת הנתונים
         commentArrayList = new ArrayList<>();
 
-        //db path to load comments
+        // נתיב לקריאת התגובות ממסד הנתונים
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Books");
         ref.child(bookId).child("Comments")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        //clear arraylist before start adding data into it
+                        // ניקוי הרשימה לפני קריאת הנתונים
                         commentArrayList.clear();
                         for (DataSnapshot ds: snapshot.getChildren()){
-                            //get data as model, spellings of variables in model must be as same as in firebase
+                            // קריאת הנתונים כמודל, שם המשתנים במודל חייבים להיות תואמים לשמות במסד הנתונים
                             ModelComment model = ds.getValue(ModelComment.class);
-                            //add to arraylist
+                            // הוספת הנתונים לרשימה
                             commentArrayList.add(model);
                         }
-                        //setup adapter
+                        // יצירת המתאם
                         adapterComment = new AdapterComment(PdfDetailActivity.this, commentArrayList);
-                        //set adapter to recyclerview
+                        // הצבת המתאם בRecyclerView
                         binding.commentsRv.setAdapter(adapterComment);
                     }
 
@@ -201,19 +201,20 @@ public class PdfDetailActivity extends AppCompatActivity {
 
     private String comment = "";
 
+    // הצגת תיבת דיאלוג להוספת תגובה
     private void addCommentDialog() {
-        //inflate bind view for dialog
+        // יצירת תיבת דיאלוג באמצעות view binding
         DialogCommentAddBinding commentAddBinding = DialogCommentAddBinding.inflate(LayoutInflater.from(this));
 
-        //setup alert dialog builder
+        // הגדרת בנאי ליצירת חלון הדיאלוג
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.CustomDialog);
         builder.setView(commentAddBinding.getRoot());
 
-        //create and show alert dialog
+        // יצירת חלון הדיאלוג והצגתו
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
 
-        //handle click, dismis dialog
+        // התנהגות לחיצה על כפתור "חזור"
         commentAddBinding.backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -221,13 +222,13 @@ public class PdfDetailActivity extends AppCompatActivity {
             }
         });
 
-        //handle click, add comment
+        // התנהגות לחיצה על כפתור "שלח"
         commentAddBinding.submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //get data
+                // קבלת הנתונים מהטופס
                 comment = commentAddBinding.commentEt.getText().toString().trim();
-                //validate data
+                // אימות הנתונים
                 if (TextUtils.isEmpty(comment)){
                     Toast.makeText(PdfDetailActivity.this, "Enter your comment...", Toast.LENGTH_SHORT).show();
                 }
@@ -237,18 +238,18 @@ public class PdfDetailActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
+    // הוספת התגובה למסד הנתונים
     private void addComment() {
-        //show progress
+        // הצגת תיבת ההתקדמות
         progressDialog.setMessage("Adding comment...");
         progressDialog.show();
 
-        //timestamp for comment id, comment time
+        // תאריך עבור מזהה התגובה והזמן שלה
         String timestamp = ""+System.currentTimeMillis();
 
-        //setup data to add in db for comment
+        // הגדרת הנתונים להוספה למסד הנתונים
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("id", ""+timestamp);
         hashMap.put("bookId", ""+bookId);
@@ -256,8 +257,7 @@ public class PdfDetailActivity extends AppCompatActivity {
         hashMap.put("comment", ""+comment);
         hashMap.put("uid", ""+firebaseAuth.getUid());
 
-        //DB path to add data into it
-        //Books > bookId > Comments > commentId > commentData
+        // נתיב להוספת התגובה למסד הנתונים
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Books");
         ref.child(bookId).child("Comments").child(timestamp)
                 .setValue(hashMap)
@@ -271,16 +271,14 @@ public class PdfDetailActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        //failed to add comment
+                        // כשיש שגיאה בהוספת התגובה
                         progressDialog.dismiss();
                         Toast.makeText(PdfDetailActivity.this, "Failed to add comment due to "+e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
-
     }
 
-
-    //request storage permission
+    // בקשת הרשאת כתיבה לאחסון
     private ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted){
@@ -293,13 +291,14 @@ public class PdfDetailActivity extends AppCompatActivity {
                 }
             });
 
+    // טעינת פרטי הספר ממסד הנתונים
     private void loadBookDetails() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Books");
         ref.child(bookId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull  DataSnapshot snapshot) {
-                        //get data
+                        // קבלת הנתונים
                         bookTitle = ""+snapshot.child("title").getValue();
                         String description = ""+snapshot.child("description").getValue();
                         String categoryId = ""+snapshot.child("categoryId").getValue();
@@ -308,16 +307,15 @@ public class PdfDetailActivity extends AppCompatActivity {
                         bookUrl = ""+snapshot.child("url").getValue();
                         String timestamp = ""+snapshot.child("timestamp").getValue();
 
-                        //required data is loaded, show download button
-                        binding.downloadBookBtn.setVisibility(View.VISIBLE);
-
-                        //format date
+                        // יצירת תאריך
                         String date = MyApplication.formatTimestamp(Long.parseLong(timestamp));
 
+                        // טעינת קטגוריה
                         MyApplication.loadCategory(
                                 ""+categoryId,
                                 binding.categoryTv
                         );
+                        // טעינת הספר מכתובת ה-URL
                         MyApplication.loadPdfFromUrlSinglePage(
                                 ""+bookUrl,
                                 ""+bookTitle,
@@ -325,19 +323,19 @@ public class PdfDetailActivity extends AppCompatActivity {
                                 binding.progressBar,
                                 binding.pagesTv
                         );
+                        // טעינת גודל הקובץ
                         MyApplication.loadPdfSize(
                                 ""+bookUrl,
                                 ""+bookTitle,
                                 binding.sizeTv
                         );
 
-                        //set data
+                        // הצבת הנתונים
                         binding.titleTv.setText(bookTitle);
                         binding.descriptionTv.setText(description);
                         binding.viewsTv.setText(viewsCount.replace("null", "N/A"));
                         binding.downloadsTv.setText(downloadsCount.replace("null", "N/A"));
                         binding.dateTv.setText(date);
-
                     }
 
                     @Override
@@ -347,22 +345,22 @@ public class PdfDetailActivity extends AppCompatActivity {
                 });
     }
 
-
+    // בדיקה האם הספר נמצא ברשימת המועדפים של המשתמש
     private void checkIsFavorite(){
-        //logged in check if its in favorite list or not
+        // בדיקה אם הספר נמצא ברשימת המועדפים של המשתמש
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
         reference.child(firebaseAuth.getUid()).child("Favorites").child(bookId)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        isInMyFavorite = snapshot.exists(); //true: if exists, false if not exists
+                        isInMyFavorite = snapshot.exists(); // אמת אם קיים, שקר אם לא קיים
                         if (isInMyFavorite){
-                            //exists in favoirte
+                            // אם קיים במועדפים
                             binding.favoriteBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_favorite_white, 0, 0);
                             binding.favoriteBtn.setText("Remove Favorite");
                         }
                         else {
-                            //not exists in favorite
+                            // אם לא קיים במועדפים
                             binding.favoriteBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_favorite_border_white, 0, 0);
                             binding.favoriteBtn.setText("Add Favorite");
                         }

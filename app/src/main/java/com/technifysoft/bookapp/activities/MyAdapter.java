@@ -18,33 +18,38 @@ import com.technifysoft.bookapp.R;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class MyAdapter extends AppCompatActivity {
 
+    // משתנה לסליידר תמונות
     ImageSlider imageSlider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recycler_item);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        // הגדרת המסך למצב מלא
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        imageSlider = (ImageSlider)findViewById(R.id.image_slider);
+        // קישור הסליידר לקוד עם ה-ID
+        imageSlider = findViewById(R.id.image_slider);
         final List<SlideModel> remoteimages = new ArrayList<>();
 
+        // קריאה למסד נתונים של Firebase לקבלת התמונות
         FirebaseDatabase.getInstance().getReference().child("Books")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot data : dataSnapshot.getChildren())
-                            remoteimages.add(new SlideModel(data.child("url").getValue().toString(), data.child("title").getValue().toString(), ScaleTypes.FIT));
+                            // הוספת תמונות לסליידר מתוך הנתונים שהתקבלו
+                            remoteimages.add(new SlideModel(data.child("url").getValue(String.class), data.child("title").getValue(String.class), ScaleTypes.FIT));
 
-                        imageSlider.setImageList(remoteimages,ScaleTypes.FIT);
+                        // הצגת התמונות בסליידר
+                        imageSlider.setImageList(remoteimages, ScaleTypes.FIT);
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-
+                        // טיפול בשגיאות אפשריות בעת קריאה למסד נתונים
                     }
                 });
     }

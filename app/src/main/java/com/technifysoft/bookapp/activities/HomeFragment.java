@@ -1,4 +1,3 @@
-
 package com.technifysoft.bookapp.activities;
 
 import android.os.Bundle;
@@ -27,31 +26,30 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-
 public class HomeFragment extends Fragment {
 
     ImageSlider imageSlider;
     View view;
 
-
+    // משתנה להצגת השעה
     private TextView textViewTime;
+    // מטפל בזמנים
     private Handler handler = new Handler();
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
+            // מגדיר את הטקסט להיות השעה הנוכחית
             String currentTime = "היי, הסיפריה תיהיה סגורה היום!  " + new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
             textViewTime.setText(currentTime);
-            // תזמן את עצמך לרוץ שוב בעוד שנייה
+            // מתזמן לעדכון שוב בעוד שנייה
             handler.postDelayed(this, 1000);
         }
     };
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        // טוען את הממשק
         view = inflater.inflate(R.layout.recycler_item, container, false);
         imageSlider = (ImageSlider)view.findViewById(R.id.image_slider);
         loadImages();
@@ -62,20 +60,21 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        // התחל את הריצה של העדכונים
+        // מתחיל בפעולת עדכון השעה
         handler.postDelayed(runnable, 1000);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        // הסר את ה-Runnable כאשר ה-Fragment מתפרק
+        // עצירת פעולת העדכון כאשר הפרגמנט נהרס
         handler.removeCallbacks(runnable);
     }
 
     private void loadImages() {
         final List<SlideModel> remoteimages = new ArrayList<>();
 
+        // שליפת תמונות מ-Firebase והצגתן בסליידר
         FirebaseDatabase.getInstance().getReference().child("Books")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -83,12 +82,12 @@ public class HomeFragment extends Fragment {
                         for (DataSnapshot data : dataSnapshot.getChildren())
                             remoteimages.add(new SlideModel(data.child("url").getValue().toString(), data.child("title").getValue().toString(), ScaleTypes.FIT));
 
-                        imageSlider.setImageList(remoteimages,ScaleTypes.FIT);
+                        imageSlider.setImageList(remoteimages, ScaleTypes.FIT);
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        // Handle potential errors
+                        // טיפול בשגיאות אפשריות
                     }
                 });
     }

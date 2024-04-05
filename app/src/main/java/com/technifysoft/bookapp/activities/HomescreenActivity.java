@@ -51,10 +51,9 @@ import com.technifysoft.bookapp.R;
 
 
 
-public class HomescreenActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener {
+public class HomescreenActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-
-
+    // הגדרת משתנים לרכיבי הממשק
     DrawerLayout drawerLayout;
     BottomNavigationView bottomNavigationView;
     FragmentManager fragmentManager;
@@ -67,14 +66,14 @@ public class HomescreenActivity extends AppCompatActivity  implements Navigation
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homescreen);
 
-
+        // אתחול Firebase Auth ורכיבי הממשק
         firebaseAuth = FirebaseAuth.getInstance();
         fab = findViewById(R.id.fab);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         drawerLayout = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout,toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -84,62 +83,59 @@ public class HomescreenActivity extends AppCompatActivity  implements Navigation
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setBackground(null);
 
+        // טיפול בבחירה מתוך התפריט התחתון
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int itemId = item.getItemId();
-                if (itemId == R.id.bottom_exit){
-                    firebaseAuth.signOut();
-                    checkUser();
-                } else if (itemId == R.id.bottom_short){
-                    openFragment(new HomeFragment());
-                    return true;
-                } else if (itemId == R.id.bottom_subscription){
-                    openFragment(new HomeFragment());
-                    return true;
-                } else if (itemId == R.id.bottom_home){
-                    startActivity(new Intent(HomescreenActivity.this, HomescreenActivity.class));
-                    finish();
+                switch (item.getItemId()) {
+                    case R.id.bottom_exit:
+                        firebaseAuth.signOut();
+                        checkUser();
+                        break;
+                    case R.id.bottom_short:
+                    case R.id.bottom_subscription:
+                        openFragment(new HomeFragment());
+                        return true;
+                    case R.id.bottom_home:
+                        startActivity(new Intent(HomescreenActivity.this, HomescreenActivity.class));
+                        finish();
+                        break;
                 }
                 return false;
             }
         });
 
-
-
         fragmentManager = getSupportFragmentManager();
         openFragment(new HomeFragment());
 
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(HomescreenActivity.this,ProfileActivity.class));
-                Toast.makeText(HomescreenActivity.this, "Profile", Toast.LENGTH_SHORT).show();
-            }
+        // כפתור פעולה מהירה לפרופיל
+        fab.setOnClickListener(v -> {
+            startActivity(new Intent(HomescreenActivity.this, ProfileActivity.class));
+            Toast.makeText(HomescreenActivity.this, "Profile", Toast.LENGTH_SHORT).show();
         });
     }
 
-
     private void checkUser() {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-        if(firebaseUser == null){
+        if (firebaseUser == null) {
             startActivity(new Intent(this, MainActivity.class));
             finish();
         }
     }
 
-
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        int itemId = item.getItemId();
-        if (itemId == R.id.nav_addBook){
-            startActivity(new Intent(HomescreenActivity.this, DashboardAdminActivity.class));
-            finish();
-        } else if( itemId == R.id.nav_adminNav1) {
-            // add page
-        } else if( itemId == R.id.nav_adminNav2) {
-            // add page
+        switch (item.getItemId()) {
+            case R.id.nav_addBook:
+                startActivity(new Intent(HomescreenActivity.this, DashboardAdminActivity.class));
+                finish();
+                break;
+            case R.id.nav_adminNav1:
+                // הוספת דף
+                break;
+            case R.id.nav_adminNav2:
+                // הוספת דף
+                break;
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
@@ -160,7 +156,4 @@ public class HomescreenActivity extends AppCompatActivity  implements Navigation
         transaction.replace(R.id.fragment_container, fragment);
         transaction.commit();
     }
-
-
-
 }

@@ -20,30 +20,31 @@ import java.util.HashMap;
 
 public class CategoryAddActivity extends AppCompatActivity {
 
-    //view binding
+    // קישורים לספרייה של ממשק המשתמש
     private ActivityCategoryAddBinding binding;
 
-    //firebase auth
+    // מופע של ניהול הזדהות של Firebase
     private FirebaseAuth firebaseAuth;
 
-    //progress dialog
+    // דיאלוג התקדמות להצגה במהלך פעולות ארוכות
     private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // יצירת קשר בין המחלקה לפריטי הממשק
         binding = ActivityCategoryAddBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        //init firebase auth
+        // אתחול Firebase Auth
         firebaseAuth = FirebaseAuth.getInstance();
 
-        //configure progress dialog
+        // קונפיגורציה של דיאלוג התקדמות
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Please wait");
         progressDialog.setCanceledOnTouchOutside(false);
 
-        //handle click, go back
+        // טיפול בלחיצה, חזרה למסך הקודם
         binding.backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,25 +52,24 @@ public class CategoryAddActivity extends AppCompatActivity {
             }
         });
 
-        //handle click, begin upload category
+        // טיפול בלחיצה, התחלת העלאת קטגוריה
         binding.submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 validateData();
             }
         });
-
-
     }
 
+    // משתנה לשמירת שם הקטגוריה
     private String category = "";
 
     private void validateData() {
-        /*Before adding validate data*/
+        /* לפני הוספה יש לוודא את הנתונים */
 
-        //get data
-         category = binding.categoryEt.getText().toString().trim();
-         //validate if not empty
+        // קבלת הנתונים
+        category = binding.categoryEt.getText().toString().trim();
+        // אימות שהשדה אינו ריק
         if (TextUtils.isEmpty(category)){
             Toast.makeText(this, "Please enter category...!", Toast.LENGTH_SHORT).show();
         }
@@ -79,28 +79,28 @@ public class CategoryAddActivity extends AppCompatActivity {
     }
 
     private void addCategoryFirebase() {
-        //show progress
+        // הצגת הודעת התקדמות
         progressDialog.setMessage("Adding category...");
         progressDialog.show();
 
-        //get timestamp
+        // קבלת חותמת זמן
         long timestamp = System.currentTimeMillis();
 
-        //setup info to add in firebase db
+        // הכנה של המידע להוספה במסד נתונים של Firebase
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("id", ""+timestamp);
         hashMap.put("category", ""+category);
         hashMap.put("timestamp", timestamp);
         hashMap.put("uid", ""+firebaseAuth.getUid());
 
-        //add to firebase db..... Database Root > Categories > categoryId > category info
+        // הוספה למסד הנתונים של Firebase... Root Database > Categories > categoryId > category info
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Categories");
         ref.child(""+timestamp)
                 .setValue(hashMap)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        //category add success
+                        // הוספת הקטגוריה הסתיימה בהצלחה
                         progressDialog.dismiss();
                         Toast.makeText(CategoryAddActivity.this, "Category added successfully...", Toast.LENGTH_SHORT).show();
                     }
@@ -108,7 +108,7 @@ public class CategoryAddActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        //category add failed
+                        // הוספת הקטגוריה נכשלה
                         progressDialog.dismiss();
                         Toast.makeText(CategoryAddActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                     }

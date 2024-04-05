@@ -26,7 +26,7 @@ import com.technifysoft.bookapp.databinding.ActivityPdfViewBinding;
 
 public class PdfViewActivity extends AppCompatActivity {
 
-    //view binding
+    // קישור ישויות הממשק
     private ActivityPdfViewBinding binding;
 
     private String bookId;
@@ -40,14 +40,15 @@ public class PdfViewActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
 
-        //get bookId from intent that we passed in intent
+        // קבלת ה-ID של הספר מה-Intent שהועבר
         Intent intent = getIntent();
         bookId = intent.getStringExtra("bookId");
-        Log.d(TAG, "onCreate: BookId: "+bookId);
+        Log.d(TAG, "onCreate: BookId: " + bookId);
 
+        // טעינת פרטי הספר
         loadBookDetails();
 
-        //handle click, go back
+        // טיפול בלחיצה, חזרה אחורה
         binding.backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,18 +60,18 @@ public class PdfViewActivity extends AppCompatActivity {
 
     private void loadBookDetails() {
         Log.d(TAG, "loadBookDetails: Get Pdf URL from db...");
-        //Database Reference to get book details e.g. get book url using book id
-        //Step (1) Get Book Url using Book Id
+        // יצירת הפנייה ל-Database כדי לקבל את פרטי הספר, למשל לקבל את כתובת ה-URL של הספר באמצעות ה-ID שלו
+        // שלב (1) קבלת כתובת ה-URL של הספר באמצעות ה-ID
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Books");
         ref.child(bookId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        //get book url
-                        String pdfUrl = ""+snapshot.child("url").getValue();
-                        Log.d(TAG, "onDataChange: PDF URL: "+pdfUrl);
+                        // קבלת כתובת ה-URL של הספר
+                        String pdfUrl = "" + snapshot.child("url").getValue();
+                        Log.d(TAG, "onDataChange: PDF URL: " + pdfUrl);
 
-                        //Step (2) Load Pdf using that url from firebase storage
+                        // שלב (2) טעינת ה-PDF באמצעות כתובת ה-URL מאחסון Firebase
                         loadBookFromUrl(pdfUrl);
                     }
 
@@ -88,29 +89,31 @@ public class PdfViewActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                     @Override
                     public void onSuccess(byte[] bytes) {
-                        //load pdf using bytes
+                        // טעינת ה-PDF באמצעות הבתים שהתקבלו
                         binding.pdfView.fromBytes(bytes)
-                                .swipeHorizontal(false) //set false to scroll vertical, set true to swipe horizontal
+                                .swipeHorizontal(false) // false לגלילה אנכית, true להחלפת דפים אופקית
                                 .onPageChange(new OnPageChangeListener() {
                                     @Override
                                     public void onPageChanged(int page, int pageCount) {
-                                        //set current and total pages in toolbar subtitle
-                                        int currentPage = (page + 1); //do + 1 because page starts from 0
-                                        binding.toolbarSubtitleTv.setText(currentPage + "/" + pageCount); //e.g. 3/290
-                                        Log.d(TAG, "onPageChanged: "+currentPage + "/" + pageCount);
+                                        // עדכון הדף הנוכחי והסך הכולל של הדפים בכותרת המשנה של הכלים
+                                        int currentPage = (page + 1); // +1 מכיוון שהדף מתחיל מ-0
+                                        binding.toolbarSubtitleTv.setText(currentPage + "/" + pageCount); // לדוגמה, 3/290
+                                        Log.d(TAG, "onPageChanged: " + currentPage + "/" + pageCount);
                                     }
                                 })
                                 .onError(new OnErrorListener() {
                                     @Override
                                     public void onError(Throwable t) {
-                                        Log.d(TAG, "onError: "+t.getMessage());
+                                        // טיפול בשגיאה בעת טעינת ה-PDF
+                                        Log.d(TAG, "onError: " + t.getMessage());
                                         Toast.makeText(PdfViewActivity.this, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
                                     }
                                 })
                                 .onPageError(new OnPageErrorListener() {
                                     @Override
                                     public void onPageError(int page, Throwable t) {
-                                        Log.d(TAG, "onPageError: "+t.getMessage());
+                                        // טיפול בשגיאה בדף ספציפי
+                                        Log.d(TAG, "onPageError: " + t.getMessage());
                                         Toast.makeText(PdfViewActivity.this, "Error on page " + page + " " + t.getMessage(), Toast.LENGTH_SHORT).show();
                                     }
                                 })
@@ -121,9 +124,9 @@ public class PdfViewActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
-                    public void onFailure(@NonNull  Exception e) {
-                        Log.d(TAG, "onFailure: "+e.getMessage());
-                        //failed to load book
+                    public void onFailure(@NonNull Exception e) {
+                        // כשלון בטעינת הספר
+                        Log.d(TAG, "onFailure: " + e.getMessage());
                         binding.progressBar.setVisibility(View.GONE);
                     }
                 });

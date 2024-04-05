@@ -24,13 +24,13 @@ import com.technifysoft.bookapp.databinding.ActivityLoginBinding;
 
 public class LoginActivity extends AppCompatActivity {
 
-    //view binding
+    // קישור ישיר לאלמנטים בממשק המשתמש
     private ActivityLoginBinding binding;
 
-    //firebase auth
+    // אותנטיקציה של Firebase
     private FirebaseAuth firebaseAuth;
 
-    //progress dialog
+    // דיאלוג התקדמות
     private ProgressDialog progressDialog;
 
     @Override
@@ -39,119 +39,87 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        //init firebase auth
+        // אתחול אותנטיקציה של Firebase
         firebaseAuth = FirebaseAuth.getInstance();
 
-        //setup progress dialog
+        // הגדרה ואתחול של דיאלוג התקדמות
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Please wait");
         progressDialog.setCanceledOnTouchOutside(false);
 
+        // טיפול בלחיצה, מעבר למסך הרשמה
+        binding.noAccountTv.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
 
-        //handle click, go to register screen
-        binding.noAccountTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-            }
-        });
+        // טיפול בלחיצה, התחלת תהליך הכניסה
+        binding.loginBtn.setOnClickListener(v -> validateData());
 
-        //handle click, begin login
-        binding.loginBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                validateData();
-            }
-        });
-
-        //handle click, open forgot password activity
-        binding.forgotTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, ForgotPasswordActivity.class));
-            }
-        });
+        // טיפול בלחיצה, מעבר למסך שחזור סיסמה
+        binding.forgotTv.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, ForgotPasswordActivity.class)));
     }
 
     private String email = "", password = "";
 
     private void validateData() {
-        /*Before loggin, lets do some data validation*/
-
-        //get data
+        // קבלת הנתונים
         email = binding.emailEt.getText().toString().trim();
         password = binding.passwordEt.getText().toString().trim();
 
-        //validate data
+        // אימות הנתונים
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-            //email is either not entered or email pattern is invalid, don't allow to continue in that case
             Toast.makeText(this, "Invalid email pattern...!", Toast.LENGTH_SHORT).show();
         }
         else if (TextUtils.isEmpty(password)){
-            //password edit text is empty, must enter password
             Toast.makeText(this, "Enter password...!", Toast.LENGTH_SHORT).show();
         }
         else {
-            //data is validated, begin login
+            // הנתונים מאומתים, התחלת תהליך הכניסה
             loginUser();
         }
     }
 
     private void loginUser() {
-        //show progress
+        // הצגת התקדמות
         progressDialog.setMessage("Logging In...");
         progressDialog.show();
 
-        //login user
+        // כניסה למשתמש
         firebaseAuth.signInWithEmailAndPassword(email, password)
-                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                    @Override
-                    public void onSuccess(AuthResult authResult) {
-                        //login success, check if user is user or admin
-                        checkUser();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(Exception e) {
-                        //login failed
-                        progressDialog.dismiss();
-                        Toast.makeText(LoginActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
+                .addOnSuccessListener(authResult -> checkUser())
+                .addOnFailureListener(e -> {
+                    progressDialog.dismiss();
+                    Toast.makeText(LoginActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 
     private void checkUser() {
         progressDialog.setMessage("Checking User...");
 
-        // check if user is user or admin from realtime database
-        // get current user
+        // בדיקה אם המשתמש הוא משתמש או מנהל
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
-        //check in db
+        // בדיקה במסד הנתונים
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
         ref.child(firebaseUser.getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
                         progressDialog.dismiss();
-                        //get user type
+                        // קבלת סוג המשתמש
                         String userType = ""+snapshot.child("userType").getValue();
-                        //check user type
-                        if (userType.equals("user")){
-                            //this is simple user, open user dashboard
-                            startActivity(new Intent(LoginActivity.this, DashboardUserActivity.class));
-                            finish();
-                        }
-                        else if (userType.equals("admin")){
-                            //this is admin, open admin dashboard
-                            startActivity(new Intent(LoginActivity.this, HomescreenActivity.class));
-                            finish();
-                        }
-                        else if (userType.equals("lib")){
-                            //this is admin, open admin dashboard
-                            startActivity(new Intent(LoginActivity.this, DashboardLibActivity.class));
-                            finish();
+                        // בדיקת סוג המשתמש ומעבר למסך המתאים
+                        switch (userType) {
+                            case "user":
+                                startActivity(new Intent(LoginActivity.this, DashboardUserActivity.class));
+                                finish();
+                                break;
+                            case "admin":
+                                startActivity(new Intent(LoginActivity.this, HomescreenActivity.class));
+                                finish();
+                                break;
+                            case "lib":
+                                startActivity(new Intent(LoginActivity.this, DashboardLibActivity.class));
+                                finish();
+                                break;
                         }
                     }
 

@@ -43,13 +43,13 @@ import java.util.HashMap;
 
 public class ProfileEditActivity extends AppCompatActivity {
 
-    //view binding
+    // קישור ישויות הממשק עם View Binding
     private ActivityProfileEditBinding binding;
 
-    //firebase auth, get/update user data using uid
+    // הגדרת FirebaseAuth, לקבלת/עדכון נתוני משתמש באמצעות uid
     private FirebaseAuth firebaseAuth;
 
-    //progress dialog
+    // תיבת דו-שיח להתקדמות
     private ProgressDialog progressDialog;
 
     private static final String TAG = "PROFILE_EDIT_TAG";
@@ -64,16 +64,16 @@ public class ProfileEditActivity extends AppCompatActivity {
         binding = ActivityProfileEditBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        //setup progress dialog
+        // הגדרת תיבת הדו-שיח להתקדמות
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Please wait");
-        progressDialog.setCanceledOnTouchOutside(false); //don't dismiss while clicking outside of progress dialog
+        progressDialog.setCanceledOnTouchOutside(false); // אל תבטל בלחיצה מחוץ לתיבת הדו-שיח
 
-        //setup firebase auth
+        // הגדרת FirebaseAuth
         firebaseAuth = FirebaseAuth.getInstance();
         loadUserInfo();
 
-        //handle click, goback
+        // טיפול בלחיצה, חזרה אחורה
         binding.backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -81,7 +81,7 @@ public class ProfileEditActivity extends AppCompatActivity {
             }
         });
 
-        //handle click, pick image
+        // טיפול בלחיצה, בחירת תמונה
         binding.profileIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,7 +89,7 @@ public class ProfileEditActivity extends AppCompatActivity {
             }
         });
 
-        //handle click, update profile
+        // טיפול בלחיצה, עדכון הפרופיל
         binding.updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -99,26 +99,23 @@ public class ProfileEditActivity extends AppCompatActivity {
 
     }
 
-    private void loadUserInfo(){
-        Log.d(TAG, "loadUserInfo: Loading user info of user "+firebaseAuth.getUid());
+    private void loadUserInfo() {
+        Log.d(TAG, "loadUserInfo: Loading user info of user " + firebaseAuth.getUid());
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
         reference.child(firebaseAuth.getUid())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        //get all info of user here from snapshot
-                        String email = ""+snapshot.child("email").getValue();
-                        String name = ""+snapshot.child("name").getValue();
-                        String profileImage = ""+snapshot.child("profileImage").getValue();
-                        String timestamp = ""+snapshot.child("timestamp").getValue();
-                        String uid = ""+snapshot.child("uid").getValue();
-                        String userType = ""+snapshot.child("userType").getValue();
+                        // קבלת כל מידע המשתמש מה-snapshot
+                        String email = "" + snapshot.child("email").getValue();
+                        String name = "" + snapshot.child("name").getValue();
+                        String profileImage = "" + snapshot.child("profileImage").getValue();
 
-                        //set data to ui
+                        // הצגת הנתונים בממשק המשתמש
                         binding.nameEt.setText(name);
 
-                        //set image, using glide
+                        // הצגת התמונה באמצעות Glide
                         Glide.with(ProfileEditActivity.this)
                                 .load(profileImage)
                                 .placeholder(R.drawable.ic_person_gray)
@@ -133,37 +130,35 @@ public class ProfileEditActivity extends AppCompatActivity {
                 });
     }
 
-    private void validateData(){
-        //get data
+    private void validateData() {
+        // איסוף הנתונים
         name = binding.nameEt.getText().toString().trim();
 
-        //validate data
-        if (TextUtils.isEmpty(name)){
-            //no name is entered
+        // אימות הנתונים
+        if (TextUtils.isEmpty(name)) {
+            // אם לא הוזן שם
             Toast.makeText(this, "Enter name...", Toast.LENGTH_SHORT).show();
-        }
-        else {
-            //name is entered
-            if (imageUri == null){
-                //need to update without image
+        } else {
+            // שם הוזן
+            if (imageUri == null) {
+                // עדכון ללא תמונה
                 updateProfile("");
-            }
-            else {
-                //need to update with image
+            } else {
+                // עדכון עם תמונה
                 uploadImage();
             }
         }
     }
 
-    private void uploadImage(){
+    private void uploadImage() {
         Log.d(TAG, "uploadImage: Uploading profile image...");
         progressDialog.setMessage("Updating profile image");
         progressDialog.show();
 
-        //image path and name, use uid to replace previous
-        String filePathAndName = "ProfileImages/"+firebaseAuth.getUid();
+        // נתיב ושם התמונה, שימוש ב-uid להחלפת התמונה הקודמת
+        String filePathAndName = "ProfileImages/" + firebaseAuth.getUid();
 
-        //storage reference
+        // הפנייה לאחסון
         StorageReference reference = FirebaseStorage.getInstance().getReference(filePathAndName);
         reference.putFile(imageUri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -172,10 +167,10 @@ public class ProfileEditActivity extends AppCompatActivity {
                         Log.d(TAG, "onSuccess: Profile image uploaded");
                         Log.d(TAG, "onSuccess: Getting url of uploaded image");
                         Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                        while (!uriTask.isSuccessful());
-                        String uploadedImageUrl = ""+uriTask.getResult();
+                        while (!uriTask.isSuccessful()) ;
+                        String uploadedImageUrl = "" + uriTask.getResult();
 
-                        Log.d(TAG, "onSuccess: Uploaded Image URL: "+uploadedImageUrl);
+                        Log.d(TAG, "onSuccess: Uploaded Image URL: " + uploadedImageUrl);
 
                         updateProfile(uploadedImageUrl);
                     }
@@ -183,26 +178,26 @@ public class ProfileEditActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "onFailure: Failed to upload image due to "+e.getMessage());
+                        Log.d(TAG, "onFailure: Failed to upload image due to " + e.getMessage());
                         progressDialog.dismiss();
-                        Toast.makeText(ProfileEditActivity.this, "Failed to upload image due to "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProfileEditActivity.this, "Failed to upload image due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
-    private void updateProfile(String imageUrl){
+    private void updateProfile(String imageUrl) {
         Log.d(TAG, "updateProfile: Updating user profile");
         progressDialog.setMessage("Updating user profile...");
         progressDialog.show();
 
-        //setup data to update in db
+        // הכנת הנתונים לעדכון במסד הנתונים
         HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("name", ""+name);
-        if (imageUri !=null){
-            hashMap.put("profileImage", ""+imageUrl);
+        hashMap.put("name", "" + name);
+        if (imageUri != null) {
+            hashMap.put("profileImage", "" + imageUrl);
         }
 
-        //update data to db
+        // עדכון הנתונים במסד הנתונים
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
         databaseReference.child(firebaseAuth.getUid())
                 .updateChildren(hashMap)
@@ -216,34 +211,33 @@ public class ProfileEditActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
-                    public void onFailure(@NonNull  Exception e) {
-                        Log.d(TAG, "onFailure: Failed to update db due to "+e.getMessage());
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "onFailure: Failed to update db due to " + e.getMessage());
                         progressDialog.dismiss();
-                        Toast.makeText(ProfileEditActivity.this, "Failed to update db due to "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProfileEditActivity.this, "Failed to update db due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
-    private void showImageAttachMenu(){
-        //init/setup popup menu
+    private void showImageAttachMenu() {
+        // הכנת תפריט קופצני
         PopupMenu popupMenu = new PopupMenu(this, binding.profileIv);
         popupMenu.getMenu().add(Menu.NONE, 0, 0, "Camera");
         popupMenu.getMenu().add(Menu.NONE, 1, 1, "Gallery");
 
         popupMenu.show();
 
-        //handle menu item clicks
+        // טיפול בלחיצות על פריטי התפריט
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                //get id of item clicked
+                // קבלת מזהה הפריט שנלחץ
                 int which = item.getItemId();
-                if (which==0){
-                    //camera clicked
+                if (which == 0) {
+                    // בחירת תמונה מהמצלמה
                     pickImageCamera();
-                }
-                else if (which==1){
-                    //gallery clicked
+                } else if (which == 1) {
+                    // בחירת תמונה מהגלריה
                     pickImageGallery();
                 }
 
@@ -252,10 +246,10 @@ public class ProfileEditActivity extends AppCompatActivity {
         });
     }
 
-    private void pickImageCamera(){
-        //intent to pick image from camera
+    private void pickImageCamera() {
+        // Intent לבחירת תמונה מהמצלמה
         ContentValues values = new ContentValues();
-        values.put(MediaStore.Images.Media.TITLE, "New Pick"); //image title
+        values.put(MediaStore.Images.Media.TITLE, "New Pick"); // כותרת התמונה
         values.put(MediaStore.Images.Media.DESCRIPTION, "Sample Image Description");
         imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
 
@@ -265,8 +259,8 @@ public class ProfileEditActivity extends AppCompatActivity {
 
     }
 
-    private void pickImageGallery(){
-        //intent to pick image from gallery
+    private void pickImageGallery() {
+        // Intent לבחירת תמונה מהגלריה
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         galleryActivityResultLauncher.launch(intent);
@@ -277,14 +271,12 @@ public class ProfileEditActivity extends AppCompatActivity {
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    //used to handle result of camera intent
-                    //get uri of image
-                    if (result.getResultCode() == Activity.RESULT_OK){
-                        Log.d(TAG, "onActivityResult: Picked From Camera "+imageUri);
-                        Intent data = result.getData(); //no need here as in camera case we already have image in imageUri variable
+                    // טיפול בתוצאה של ה-Intent של המצלמה
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Log.d(TAG, "onActivityResult: Picked From Camera " + imageUri);
 
                         try {
-                            //set image, using glide
+                            // הצגת התמונה באמצעות Glide
                             Glide.with(ProfileEditActivity.this)
                                     .load(imageUri)
                                     .placeholder(R.drawable.ic_person_gray)
@@ -292,9 +284,8 @@ public class ProfileEditActivity extends AppCompatActivity {
                         } catch (Exception e) {
                             Log.e(TAG, "onActivityResult: ", e);
                         }
-                    }
-                    else {
-                        Toast.makeText(ProfileEditActivity.this, "Cacnelled", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(ProfileEditActivity.this, "Cancelled", Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -306,16 +297,14 @@ public class ProfileEditActivity extends AppCompatActivity {
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    //used to handle result of gallery intent
-                    // get uri of image
-                    if (result.getResultCode() == Activity.RESULT_OK){
-                        Log.d(TAG, "onActivityResult: "+imageUri);
+                    // טיפול בתוצאה של ה-Intent של הגלריה
+                    if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent data = result.getData();
                         imageUri = data.getData();
-                        Log.d(TAG, "onActivityResult: Picked From Gallery "+imageUri);
+                        Log.d(TAG, "onActivityResult: Picked From Gallery " + imageUri);
 
                         try {
-                            //set image, using glide
+                            // הצגת התמונה באמצעות Glide
                             Glide.with(ProfileEditActivity.this)
                                     .load(imageUri)
                                     .placeholder(R.drawable.ic_person_gray)
@@ -323,9 +312,8 @@ public class ProfileEditActivity extends AppCompatActivity {
                         } catch (Exception e) {
                             Log.e(TAG, "onActivityResult: ", e);
                         }
-                    }
-                    else {
-                        Toast.makeText(ProfileEditActivity.this, "Cacnelled", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(ProfileEditActivity.this, "Cancelled", Toast.LENGTH_SHORT).show();
                     }
 
                 }

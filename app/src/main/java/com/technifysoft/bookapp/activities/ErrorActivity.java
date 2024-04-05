@@ -12,34 +12,41 @@ import com.technifysoft.bookapp.R;
 
 public class ErrorActivity extends AppCompatActivity {
 
-
+    // כפתור לדיווח על בעיה
     Button btnReport;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // הפיכת האפליקציה למתאימה לשולי המסך
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_error);
 
+        // קישור הכפתור מהממשק למשתנה
+        btnReport = findViewById(R.id.sendReportButton);
 
-        btnReport = (Button) findViewById(R.id.sendReportButton);
-
+        // הגדרת מאזין לכפתור
         btnReport.setOnClickListener(view -> {
+            // פעולה שתתבצע בלחיצה - דיווח על בעיה
             reportProblem();
         });
-
     }
 
-    private void reportProblem(){
-
+    // פונקציה לדיווח על בעיות
+    private void reportProblem() {
+        // כתובת האימייל לדיווח
         String email = "Gal-ta@windowslive.com";
-        String subject = "Reporting for app "+getString(R.string.app_name);
+        // נושא ההודעה
+        String subject = "Reporting for app " + getString(R.string.app_name);
 
+        // יצירת כוונה עם הפרטים הנדרשים לשליחת אימייל
         Intent intent = new Intent(Intent.ACTION_SENDTO);
-        intent.setData(Uri.parse("mailto:"));
-        intent.putExtra(Intent.EXTRA_EMAIL,new String[]{email});
-        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
-        intent.putExtra(Intent.EXTRA_TEXT,"");
+        intent.setData(Uri.parse("mailto:")); // רק יישומי אימייל יכולים לטפל בכוונה זו
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{email}); // הוספת כתובת האימייל
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject); // הוספת הנושא
+        intent.putExtra(Intent.EXTRA_TEXT, ""); // הודעה ריקה
 
-        startActivity(Intent.createChooser(intent,"Choose an email client:"));
+        // הצגת בורר אימייל למשתמש
+        startActivity(Intent.createChooser(intent, "Choose an email client:"));
     }
 }

@@ -22,13 +22,13 @@ import java.util.HashMap;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    //view binding
+    // קישור לתצוגה
     private ActivityRegisterBinding binding;
 
-    //firebase auth
+    // התחברות ל- Firebase
     private FirebaseAuth firebaseAuth;
 
-    //progress dialog
+    // חלון התקדמות
     private ProgressDialog progressDialog;
 
     @Override
@@ -37,15 +37,15 @@ public class RegisterActivity extends AppCompatActivity {
         binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        //init firebase auth
+        // אתחול התחברות ל- Firebase
         firebaseAuth = FirebaseAuth.getInstance();
 
-        //setup progress dialog
+        // הגדרת חלון התקדמות
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Please wait");
         progressDialog.setCanceledOnTouchOutside(false);
 
-        //handle click, go back
+        // לטפל בלחיצה ולחזור
         binding.backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,72 +53,72 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        //handle click, begin register
+        // לטפל בלחיצה ולהתחיל ברישום
         binding.registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 validateData();
             }
         });
-
     }
 
+    // משתנים לשמירת נתונים
     private String name = "", email = "", password = "";
 
     private void validateData() {
-        /*Before creating account, lets do some data validation*/
+        /* לפני יצירת החשבון, בואו נבצע תקינות נתונים */
 
-        //get data
+        // קבלת הנתונים
         name = binding.nameEt.getText().toString().trim();
         email = binding.emailEt.getText().toString().trim();
         password = binding.passwordEt.getText().toString().trim();
         String cPassword = binding.cPasswordEt.getText().toString().trim();
 
-        //validate data
+        // ביצוע תקינות נתונים
         if (TextUtils.isEmpty(name)){
-            //name edit text is empty, must enter name
+            // אם רשום שם ריק, יש להזין שם
             Toast.makeText(this, "Enter you name...", Toast.LENGTH_SHORT).show();
         }
         else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-            //email is either not entered or email pattern is invalid, don't allow to continue in that case
+            // אם כתובת האימייל לא הוזנה או התבנית שלה לא חוקית, אי אפשר להמשיך במקרה כזה
             Toast.makeText(this, "Invalid email pattern...!", Toast.LENGTH_SHORT).show();
         }
         else if (TextUtils.isEmpty(password)){
-            //password edit text is empty, must enter password
+            // אם רשום סיסמה ריקה, יש להזין סיסמה
             Toast.makeText(this, "Enter password...!", Toast.LENGTH_SHORT).show();
         }
         else if (TextUtils.isEmpty(cPassword)){
-            //confirm password edit text is empty, must enter confirm password
+            // אם רשומה אימות סיסמה ריקה, יש להזין אימות סיסמה
             Toast.makeText(this, "Confirm Password...!", Toast.LENGTH_SHORT).show();
         }
         else if (!password.equals(cPassword)){
-            //password and confirm password doesn't match, don't allow to continue in that case, both password must match
+            // אם הסיסמה ואימות הסיסמה לא תואמים, אי אפשר להמשיך במקרה כזה, יש לוודא ששתי הסיסמאות תואמות
             Toast.makeText(this, "Password doesn't match...!", Toast.LENGTH_SHORT).show();
         }
         else {
-            //all data is validated, begin creating account
+            // כל הנתונים תקינים, יש להתחיל ביצירת החשבון
             createUserAccount();
         }
     }
 
     private void createUserAccount() {
-        //show progress
+        // הצגת התקדמות
         progressDialog.setMessage("Creating account...");
         progressDialog.show();
 
-        //create user in firebase auth
+        // יצירת משתמש ב- Firebase Auth
         firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
-                        //account creation success, now add in firebase realtime database
+                        // החשבון נוצר בהצלחה, עכשיו יש להוסיף למסד נתונים ריאלי של Firebase
                         updateUserInfo();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(Exception e) {
-                        //account creating failed
+                        // יצירת החשבון נכשלה
                         progressDialog.dismiss();
                         Toast.makeText(RegisterActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
@@ -128,32 +128,32 @@ public class RegisterActivity extends AppCompatActivity {
     private void updateUserInfo() {
         progressDialog.setMessage("Saving user info...");
 
-        //timestamp
+        // זמן סימן
         long timestamp = System.currentTimeMillis();
 
-        //get current user uid, since user is registered so we can get now
+        // קבלת המזהה הייחודי של המשתמש הנוכחי, מאחר והמשתמש נרשם כבר כעת אנו יכולים לקבל אותו
         String uid = firebaseAuth.getUid();
 
-        //setup data to add in db
+        // הגדרת הנתונים להוספה למסד הנתונים
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("uid", uid);
         hashMap.put("email", email);
         hashMap.put("name", name);
-        hashMap.put("profileImage", "");//add empty, will do later
-        hashMap.put("userType", "user"); //possible values are user, admin:  will make admin manually in firebase realtime database by changing this value
+        hashMap.put("profileImage", "");//הוספת ריק, נעשה זאת מאוחר יותר
+        hashMap.put("userType", "user"); //ערכים אפשריים הם user, admin:  ניצור מנהל באופן ידני במסד הנתונים הריאלי של Firebase על ידי שינוי ערך זה
         hashMap.put("timestamp", timestamp);
 
-        //set data to db
+        // הגדרת הנתונים במסד הנתונים
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
         ref.child(uid)
                 .setValue(hashMap)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        //data added to db
+                        // הנתונים נוספו למסד הנתונים
                         progressDialog.dismiss();
                         Toast.makeText(RegisterActivity.this, "Account created...", Toast.LENGTH_SHORT).show();
-                        //since user account is created so start dashboard of user
+                        // מאחר והחשבון של המשתמש נוצר כעת נתחיל במסך הלוח של המשתמש
                         startActivity(new Intent(RegisterActivity.this, DashboardUserActivity.class));
                         finish();
                     }
@@ -161,7 +161,7 @@ public class RegisterActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(Exception e) {
-                        //data failed adding to db
+                        // הנתונים לא נוספו למסד הנתונים
                         progressDialog.dismiss();
                         Toast.makeText(RegisterActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                     }

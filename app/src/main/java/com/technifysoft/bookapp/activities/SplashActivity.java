@@ -17,7 +17,7 @@ import com.technifysoft.bookapp.R;
 
 public class SplashActivity extends AppCompatActivity {
 
-    //firebase auth
+    // אימות Firebase
     private FirebaseAuth firebaseAuth;
 
     @Override
@@ -25,44 +25,44 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        //init firebase auth
+        // אתחול אימות Firebase
         firebaseAuth = FirebaseAuth.getInstance();
 
-        //start main screen after 2seconds
+        // התחל מסך ראשי אחרי 2 שניות
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 checkUser();
             }
-        },2000);//2000 means 2 seconds
+        },2000); // 2000 משמעותו 2 שניות
     }
 
     private void checkUser() {
-        //get current user, if logged in
+        // לקבל את המשתמש הנוכחי, אם מחובר
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         if (firebaseUser == null){
-            //user not logged in
-            //start main screen
+            // משתמש לא מחובר
+            // התחל מסך ראשי
             startActivity(new Intent(SplashActivity.this, MainActivity.class));
-            finish();//finish this activity
+            finish(); // סיום פעילות זו
         }
         else {
-            //user logged in check user type, same as done in login screen
+            // המשתמש מחובר - לבדוק את סוג המשתמש, כמו שנעשה במסך התחברות
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
             ref.child(firebaseUser.getUid())
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot snapshot) {
-                            //get user type
+                            // לקבל את סוג המשתמש
                             String userType = ""+snapshot.child("userType").getValue();
-                            //check user type
+                            // לבדוק את סוג המשתמש
                             if (userType.equals("user")){
-                                //this is simple user, open user dashboard
+                                // זהו משתמש רגיל, לפתוח לוח המחוונים של המשתמש
                                 startActivity(new Intent(SplashActivity.this, DashboardUserActivity.class));
                                 finish();
                             }
                             else if (userType.equals("admin")){
-                                //this is admin, open admin dashboard
+                                // זהו מנהל, לפתוח לוח המחוונים של המנהל
                                 startActivity(new Intent(SplashActivity.this, DashboardAdminActivity.class));
                                 finish();
                             }

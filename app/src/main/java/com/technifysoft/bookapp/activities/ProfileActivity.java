@@ -56,26 +56,27 @@ public class ProfileActivity extends AppCompatActivity {
         binding = ActivityProfileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        //reset data of user info
+        // איפוס נתוני מידע על המשתמש
         binding.accountTypeTv.setText("N/A");
         binding.memberDateTv.setText("N/A");
         binding.favoriteBookCountTv.setText("N/A");
         binding.accountStatusTv.setText("N/A");
 
-        //setup firebase auth
+        // הגדרת FirebaseAuth
         firebaseAuth = FirebaseAuth.getInstance();
-        //get current user
+        // קבלת המשתמש הנוכחי
         firebaseUser = firebaseAuth.getCurrentUser();
 
-        //init/setup progress dialog
+        // הגדרת תיבת הדו-שיח להתקדמות
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Please wait");
         progressDialog.setCanceledOnTouchOutside(false);
 
+        // טעינת מידע המשתמש והספרים המועדפים
         loadUserInfo();
         loadFavoriteBooks();
 
-        //handle click, start profile edit page
+        // טיפול בלחיצה, מעבר לעריכת פרופיל
         binding.profileEditBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -83,7 +84,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        //handle click, goback
+        // טיפול בלחיצה, חזרה אחורה
         binding.backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -91,16 +92,16 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        //handle click, verify user if not
+        // טיפול בלחיצה, אימות משתמש אם טרם אומת
         binding.accountStatusTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (firebaseUser.isEmailVerified()){
-                    //already verified
+                    // כבר אומת
                     Toast.makeText(ProfileActivity.this, "Already verified...", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    //not verified, show confirmation dialog first
+                    // לא אומת, הצגת תיבת דו-שיח לאימות
                     emailVerificationDialog();
                 }
             }
@@ -109,7 +110,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void emailVerificationDialog() {
-        //Alert dialog
+        // תיבת דו-שיח
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Verify Email")
                 .setMessage("Are you sure you want to send email verification instructions to your email "+firebaseUser.getEmail())
@@ -129,15 +130,16 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void sendEmailVerification() {
-        //show progress
+        // הצגת תיבת הדו-שיח
         progressDialog.setMessage("Sending email verification instructions to your email "+firebaseUser.getEmail());
         progressDialog.show();
 
+        // שליחת מייל לאימות
         firebaseUser.sendEmailVerification()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        //successfully sent
+                        // שליחה בהצלחה
                         progressDialog.dismiss();
                         Toast.makeText(ProfileActivity.this, "Instructions sent, check your email "+firebaseUser.getEmail(), Toast.LENGTH_SHORT).show();
                     }
@@ -145,7 +147,7 @@ public class ProfileActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        //failed to send
+                        // שליחה נכשלה
                         progressDialog.dismiss();
                         Toast.makeText(ProfileActivity.this, "Failed due to "+e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
@@ -155,19 +157,20 @@ public class ProfileActivity extends AppCompatActivity {
     private void loadUserInfo(){
         Log.d(TAG, "loadUserInfo: Loading user info of user "+firebaseAuth.getUid());
 
-        //get email verification status, after verification you have to re login to get changes...
+        // בדיקת מצב אימות האימייל, לאחר אימות יש להתחבר מחדש כדי לראות שינויים
         if (firebaseUser.isEmailVerified()) {
             binding.accountStatusTv.setText("Verified");
         } else {
             binding.accountStatusTv.setText("Not Verified");
         }
 
+        // הפנייה למסד נתונים כדי לקבל את פרטי המשתמש
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
         reference.child(firebaseAuth.getUid())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        //get all info of user here from snapshot
+                        // קבלת כל המידע על המשתמש מה-snapshot
                         String email = ""+snapshot.child("email").getValue();
                         String name = ""+snapshot.child("name").getValue();
                         String profileImage = ""+snapshot.child("profileImage").getValue();
@@ -175,16 +178,16 @@ public class ProfileActivity extends AppCompatActivity {
                         String uid = ""+snapshot.child("uid").getValue();
                         String userType = ""+snapshot.child("userType").getValue();
 
-                        //format date to dd/MM/yyyy
+                        // עיצוב התאריך ל-dd/MM/yyyy
                         String formattedDate = MyApplication.formatTimestamp(Long.parseLong(timestamp));
 
-                        //set data to ui
+                        // הצגת הנתונים בממשק המשתמש
                         binding.emailTv.setText(email);
                         binding.nameTv.setText(name);
                         binding.memberDateTv.setText(formattedDate);
                         binding.accountTypeTv.setText(userType);
 
-                        //set image, using glide
+                        // הצגת תמונת הפרופיל, באמצעות Glide
                         try {
                             Glide.with(ProfileActivity.this)
                                     .load(profileImage)
@@ -204,35 +207,31 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void loadFavoriteBooks(){
-        //init list
+        // אתחול הרשימה
         pdfArrayList = new ArrayList<>();
 
-        //load favorite books from datbase
-        //Users > userId > Favorites
+        // טעינת הספרים המועדפים ממסד הנתונים
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
         ref.child(firebaseAuth.getUid()).child("Favorites")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        //clear list before starting adding data
+                        // ניקוי הרשימה לפני ההוספה
                         pdfArrayList.clear();
                         for (DataSnapshot ds: snapshot.getChildren()){
-                            //we will only get the bookId here, and we got other details in adapter using that bookId
                             String bookId = ""+ds.child("bookId").getValue();
 
-                            //set id to model
                             ModelPdf modelPdf = new ModelPdf();
                             modelPdf.setId(bookId);
 
-                            //add model to list
                             pdfArrayList.add(modelPdf);
                         }
 
-                        //set number of favorite books
-                        binding.favoriteBookCountTv.setText(""+pdfArrayList.size());//can't set int/long to textview so concatnate with string
-                        //setup adapter
+                        // הצגת מספר הספרים המועדפים
+                        binding.favoriteBookCountTv.setText(""+pdfArrayList.size());
+                        // הגדרת האדפטר
                         adapterPdfFavorite = new AdapterPdfFavorite(ProfileActivity.this, pdfArrayList);
-                        //set adapter to recyclerview
+                        // הצגת האדפטר ב-RecyclerView
                         binding.booksRv.setAdapter(adapterPdfFavorite);
 
                     }

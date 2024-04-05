@@ -23,12 +23,12 @@ import java.util.ArrayList;
 
 public class PdfListAdminActivity extends AppCompatActivity {
 
-    //viewbinding
+    // הגדרת ViewBinding
     private ActivityPdfListAdminBinding binding;
 
-    //arraylist to hold list of data of type ModelPdf
+    // ArrayList לשמירת רשימת נתונים מסוג ModelPdf
     private ArrayList<ModelPdf> pdfArrayList;
-    //adapter
+    // הגדרת המתאם (Adapter)
     private AdapterPdfAdmin adapterPdfAdmin;
 
     private String categoryId, categoryTitle;
@@ -38,20 +38,22 @@ public class PdfListAdminActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // טעינת ה-view באמצעות ViewBinding
         binding = ActivityPdfListAdminBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        //get data from intent
+        // קבלת הנתונים מה-Intent
         Intent intent = getIntent();
         categoryId = intent.getStringExtra("categoryId");
         categoryTitle = intent.getStringExtra("categoryTitle");
 
-        //set pdf category
+        // הגדרת כותרת הקטגוריה של ה-PDF
         binding.subTitleTv.setText(categoryTitle);
 
+        // טעינת רשימת ה-PDF
         loadPdfList();
 
-        //search
+        // חיפוש
         binding.searchEt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -60,7 +62,7 @@ public class PdfListAdminActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //search as and when user type each letter
+                // חיפוש בזמן אמת עם כל הקלדה של המשתמש
                 try {
                     adapterPdfAdmin.getFilter().filter(s);
                 }
@@ -75,7 +77,7 @@ public class PdfListAdminActivity extends AppCompatActivity {
             }
         });
 
-        //handle click, go to previous activity
+        // טיפול בלחיצה, חזרה לפעילות הקודמת
         binding.backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,32 +86,35 @@ public class PdfListAdminActivity extends AppCompatActivity {
         });
     }
 
+    // טעינת רשימת ה-PDF
     private void loadPdfList() {
-        //init list before adding data
+        // אתחול הרשימה לפני הוספת נתונים
         pdfArrayList = new ArrayList<>();
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Books");
+        // שאילתא ל-Firebase לפי categoryId
         ref.orderByChild("categoryId").equalTo(categoryId)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull  DataSnapshot snapshot) {
-                        pdfArrayList.clear();
+                        pdfArrayList.clear(); // ניקוי הרשימה לפני הוספת נתונים חדשים
                         for (DataSnapshot ds: snapshot.getChildren()){
-                            //get data
+                            // קבלת הנתונים
                             ModelPdf model = ds.getValue(ModelPdf.class);
-                            //add to list
+                            // הוספת הנתונים לרשימה
                             pdfArrayList.add(model);
 
                             Log.d(TAG, "onDataChange: "+model.getId()+" "+model.getTitle());
                         }
-                        //setup adapter
+                        // הגדרת המתאם עם הנתונים החדשים
                         adapterPdfAdmin = new AdapterPdfAdmin(PdfListAdminActivity.this, pdfArrayList);
+                        // חיבור המתאם ל-RecyclerView
                         binding.bookRv.setAdapter(adapterPdfAdmin);
                     }
 
                     @Override
                     public void onCancelled(@NonNull  DatabaseError error) {
-
+                        // טיפול בשגיאה
                     }
                 });
     }

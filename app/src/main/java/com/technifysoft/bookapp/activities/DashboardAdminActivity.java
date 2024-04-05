@@ -24,15 +24,15 @@ import java.util.ArrayList;
 
 public class DashboardAdminActivity extends AppCompatActivity {
 
-    //view binding
+    // קישורים לממשק המשתמש
     private ActivityDashboardAdminBinding binding;
 
-    //firebase auth
+    // מופע לניהול התחברות Firebase
     private FirebaseAuth firebaseAuth;
 
-    //arraylist to store category
+    // רשימה לשמירת הקטגוריות
     private ArrayList<ModelCategory> categoryArrayList;
-    //adapter
+    // מתאם
     private AdapterCategory adapterCategory;
 
     @Override
@@ -41,13 +41,13 @@ public class DashboardAdminActivity extends AppCompatActivity {
         binding = ActivityDashboardAdminBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        //init firebase auth
+        // אתחול Firebase Auth
         firebaseAuth = FirebaseAuth.getInstance();
         checkUser();
         loadCategories();
 
 
-        //edit text change listern, search
+        // מאזין לשינויים בתיבת הטקסט, חיפוש
         binding.searchEt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -56,7 +56,7 @@ public class DashboardAdminActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //called as and when user type each letter
+                // מתבצע כאשר המשתמש מקליד כל אות
                 try {
                     adapterCategory.getFilter().filter(s);
                 }
@@ -71,7 +71,7 @@ public class DashboardAdminActivity extends AppCompatActivity {
             }
         });
 
-        //handle click, logout
+        // טיפול בלחיצה, התנתקות
         binding.logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,7 +80,7 @@ public class DashboardAdminActivity extends AppCompatActivity {
             }
         });
 
-        //handle click, start category add screen
+        // טיפול בלחיצה, מעבר למסך הוספת קטגוריה
         binding.addCategoryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,7 +88,7 @@ public class DashboardAdminActivity extends AppCompatActivity {
             }
         });
 
-        //handle click, start pdf add screen
+        // טיפול בלחיצה, מעבר למסך הוספת PDF
         binding.addPdfFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,40 +96,37 @@ public class DashboardAdminActivity extends AppCompatActivity {
             }
         });
 
-        //handle click, open profile
+        // טיפול בלחיצה, פתיחת פרופיל
         binding.profileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(DashboardAdminActivity.this, ProfileActivity.class));
             }
         });
-
-
     }
 
     private void loadCategories() {
-        //init araylist
+        // אתחול רשימת הקטגוריות
         categoryArrayList = new ArrayList<>();
 
-        //get all categories from firebase > Categories
+        // קבלת כל הקטגוריות מ-Firebase > Categories
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Categories");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                //clear arraylist before adding data into it
+                // ניקוי הרשימה לפני הוספת נתונים לתוכה
                 categoryArrayList.clear();
                 for (DataSnapshot ds: snapshot.getChildren()){
-                    //get data
+                    // קבלת הנתונים
                     ModelCategory model = ds.getValue(ModelCategory.class);
 
-                    //add to arraylist
+                    // הוספה לרשימה
                     categoryArrayList.add(model);
                 }
-                //setup adapter
+                // הגדרת המתאם
                 adapterCategory = new AdapterCategory(DashboardAdminActivity.this, categoryArrayList);
-                //set adapter to recyclerview
+                // הגדרת המתאם ל-recyclerview
                 binding.categoriesRv.setAdapter(adapterCategory);
-
             }
 
             @Override
@@ -140,17 +137,17 @@ public class DashboardAdminActivity extends AppCompatActivity {
     }
 
     private void checkUser() {
-        //get current user
+        // קבלת המשתמש הנוכחי
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         if (firebaseUser==null){
-            //not logged in, goto main screen
+            // לא מחובר, מעבר למסך הראשי
             startActivity(new Intent(this, MainActivity.class));
             finish();
         }
         else {
-            //logged in, get user info
+            // מחובר, קבלת פרטי המשתמש
             String email = firebaseUser.getEmail();
-            //set in textview of toolbar
+            // הצגה ב-textview של סרגל הכלים
             binding.subTitleTv.setText(email);
         }
     }

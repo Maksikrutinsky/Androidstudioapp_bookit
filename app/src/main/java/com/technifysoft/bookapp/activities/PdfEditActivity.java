@@ -26,13 +26,13 @@ import java.util.HashMap;
 
 public class PdfEditActivity extends AppCompatActivity {
 
-    //view binding
+    // קישור לתצוגה
     private ActivityPdfEditBinding binding;
 
-    //book id get from intent started from AdapterPdfAdmin
+    // מזהה הספר שמתקבל מהמתנה שנשלחה מ- AdapterPdfAdmin
     private String bookId;
 
-    //progress dialog
+    // חלון התקדמות
     private ProgressDialog progressDialog;
 
     private ArrayList<String> categoryTitleArraylist, categoryIdArrayList;
@@ -45,10 +45,10 @@ public class PdfEditActivity extends AppCompatActivity {
         binding = ActivityPdfEditBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        //book id get from intent started from AdapterPdfAdmin
+        // מזהה הספר שמתקבל מהמתנה שנשלחה מ- AdapterPdfAdmin
         bookId = getIntent().getStringExtra("bookId");
 
-        //setup progress dialog
+        // הגדרת חלון התקדמות
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Please wait");
         progressDialog.setCanceledOnTouchOutside(false);
@@ -56,7 +56,7 @@ public class PdfEditActivity extends AppCompatActivity {
         loadCategories();
         loadBookInfo();
 
-        //handle click, pick category
+        // לטפל בלחיצה ובחירת קטגוריה
         binding.categoryTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,7 +64,7 @@ public class PdfEditActivity extends AppCompatActivity {
             }
         });
 
-        //handle click, go to previous screen
+        // לטפל בלחיצה ולחזור אחורה
         binding.backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,7 +72,7 @@ public class PdfEditActivity extends AppCompatActivity {
             }
         });
 
-        //handle click begin upload
+        // לטפל בלחיצה ולהתחיל בהעלאה
         binding.submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,11 +90,11 @@ public class PdfEditActivity extends AppCompatActivity {
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        //get book info
+                        // לקבל את פרטי הספר
                         selectedCategoryId = ""+snapshot.child("categoryId").getValue();
                         String description = ""+snapshot.child("description").getValue();
                         String title = ""+snapshot.child("title").getValue();
-                        //set to views
+                        // להציג בתצוגה
                         binding.titleEt.setText(title);
                         binding.descriptionEt.setText(description);
 
@@ -104,9 +104,9 @@ public class PdfEditActivity extends AppCompatActivity {
                                 .addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        //get category
+                                        // לקבל את הקטגוריה
                                         String category = ""+snapshot.child("category").getValue();
-                                        //set to category text view
+                                        // להציב בטקסטוויו
                                         binding.categoryTv.setText(category);
                                     }
 
@@ -127,11 +127,11 @@ public class PdfEditActivity extends AppCompatActivity {
 
     private String title="", description ="";
     private void validateData(){
-        //get data
+        // לקבל נתונים
         title = binding.titleEt.getText().toString().trim();
         description = binding.descriptionEt.getText().toString().trim();
 
-        //validate data
+        // לבדוק תקינות נתונים
         if (TextUtils.isEmpty(title)){
             Toast.makeText(this, "Enter Title...", Toast.LENGTH_SHORT).show();
         }
@@ -149,17 +149,17 @@ public class PdfEditActivity extends AppCompatActivity {
     private void updatePdf() {
         Log.d(TAG, "updatePdf: Starting updating pdf info to db...");
 
-        //show progress
+        // להציג את התקדמות ההעלאה
         progressDialog.setMessage("Updating book info...");
         progressDialog.show();
 
-        //setup data to update to db
+        // להגדיר נתונים לעדכון ב- DB
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("title", ""+title);
         hashMap.put("description", ""+description);
         hashMap.put("categoryId", ""+selectedCategoryId);
 
-        //start updating
+        // להתחיל בעדכון
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Books");
         ref.child(bookId)
                 .updateChildren(hashMap)
@@ -184,23 +184,23 @@ public class PdfEditActivity extends AppCompatActivity {
     private String selectedCategoryId="", selectedCategoryTitle="";
 
     private void categoryDialog(){
-        //make string array from arraylist of string
+        // ליצור מערך מערכות מהמערך הרשימה של מחרוזות
         String[] categoriesArray = new String[categoryTitleArraylist.size()];
         for (int i=0; i<categoryTitleArraylist.size(); i++){
             categoriesArray[i] = categoryTitleArraylist.get(i);
         }
 
 
-        //Alert Dialog
+        // דיאלוג התראה
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Chooose Category")
+        builder.setTitle("Choose Category")
                 .setItems(categoriesArray, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         selectedCategoryId = categoryIdArrayList.get(which);
                         selectedCategoryTitle = categoryTitleArraylist.get(which);
 
-                        //set to textview
+                        // להציב בתצוגה
                         binding.categoryTv.setText(selectedCategoryTitle);
                     }
                 })

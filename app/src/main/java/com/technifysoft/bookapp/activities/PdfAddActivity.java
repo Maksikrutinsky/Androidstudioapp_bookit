@@ -34,24 +34,25 @@ import java.util.HashMap;
 
 public class PdfAddActivity extends AppCompatActivity {
 
-    //setup view binding
+    // קישור ישיר לאלמנטים בממשק המשתמש
     private ActivityPdfAddBinding binding;
 
-    //firebase auth
+    // אותנטיקציה של Firebase
     private FirebaseAuth firebaseAuth;
 
-    //progress dialog
+    // דיאלוג התקדמות
     private ProgressDialog progressDialog;
 
-    //arraylist to hold pdf categories
+    // ArrayList לשמירת קטגוריות ה-PDF
     private ArrayList<String> categoryTitleArrayList, categoryIdArrayList;
 
-    //uri of picked pdf
+    // URI של ה-PDF שנבחר
     private Uri pdfUri = null;
 
+    // קוד בחירת PDF
     private static final int PDF_PICK_CODE = 1000;
 
-    //TAG for debugging
+    // תגית לדיבאגינג
     private static final String TAG = "ADD_PDF_TAG";
 
     @Override
@@ -60,230 +61,175 @@ public class PdfAddActivity extends AppCompatActivity {
         binding = ActivityPdfAddBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        //init firebase auth
+        // אתחול Firebase Auth
         firebaseAuth = FirebaseAuth.getInstance();
         loadPdfCategories();
 
-        //setup progress dialog
+        // הגדרה ואתחול של דיאלוג התקדמות
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Please wait");
         progressDialog.setCanceledOnTouchOutside(false);
 
-        //handle click, go to previous activity
-        binding.backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        // טיפול בלחיצה, חזרה לפעילות הקודמת
+        binding.backBtn.setOnClickListener(v -> onBackPressed());
 
-        //handle click, attach pdf
-        binding.attachBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pdfPickIntent();
-            }
-        });
+        // טיפול בלחיצה, צרף PDF
+        binding.attachBtn.setOnClickListener(v -> pdfPickIntent());
 
-        //handle click, pick category
-        binding.categoryTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                categoryPickDialog();
-            }
-        });
+        // טיפול בלחיצה, בחר קטגוריה
+        binding.categoryTv.setOnClickListener(v -> categoryPickDialog());
 
-        //handle click, upload pdf
-        binding.submitBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //validate data
-                validateData();
-            }
-        });
-
-
+        // טיפול בלחיצה, העלה PDF
+        binding.submitBtn.setOnClickListener(v -> validateData());
     }
 
-    private String title= "", description = "";
+    private String title = "", description = "";
 
     private void validateData() {
-        //Step 1: Validate data
-        Log.d(TAG, "validateData: validating data...");
+        // שלב 1: אימות נתונים
 
-
-        //get data
+        // קבלת נתונים
         title = binding.titleEt.getText().toString().trim();
         description = binding.descriptionEt.getText().toString().trim();
 
-        //validate data
-        if (TextUtils.isEmpty(title)){
+        // אימות נתונים
+        if (TextUtils.isEmpty(title)) {
             Toast.makeText(this, "Enter Title...", Toast.LENGTH_SHORT).show();
-        }
-        else if (TextUtils.isEmpty(description)){
+        } else if (TextUtils.isEmpty(description)) {
             Toast.makeText(this, "Enter Description...", Toast.LENGTH_SHORT).show();
-        }
-        else if (TextUtils.isEmpty(selectedCategoryTitle)){
+        } else if (TextUtils.isEmpty(selectedCategoryTitle)) {
             Toast.makeText(this, "Pick Category...", Toast.LENGTH_SHORT).show();
-        }
-        else if (pdfUri==null){
+        } else if (pdfUri == null) {
             Toast.makeText(this, "Pick Pdf...", Toast.LENGTH_SHORT).show();
-        }
-        else {
-            //all data is valid, can upload now
+        } else {
+            // כל הנתונים תקפים, ניתן להעלות
             uploadPdfToStorage();
         }
     }
 
     private void uploadPdfToStorage() {
-        //Step 2: Upload Pdf to firebase storage
-        Log.d(TAG, "uploadPdfToStorage: uploading to storage...");
+        // שלב 2: העלאת ה-PDF לאחסון של Firebase
 
-        //show progress
+        // הצגת התקדמות
         progressDialog.setMessage("Uploading Pdf...");
         progressDialog.show();
 
-        //timestamp
+        // זמן
         long timestamp = System.currentTimeMillis();
 
-        //path of pdf in firebase storage
+        // נתיב ה-PDF באחסון של Firebase
         String filePathAndName = "Books/" + timestamp;
-        //storage reference
+        // הפניית אחסון
         StorageReference storageReference = FirebaseStorage.getInstance().getReference(filePathAndName);
         storageReference.putFile(pdfUri)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Log.d(TAG, "onSuccess: PDF uploaded to storage...");
-                        Log.d(TAG, "onSuccess: getting pdf url");
+                .addOnSuccessListener(taskSnapshot -> {
+                    // השגת URL של ה-PDF
+                    Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                    while (!uriTask.isSuccessful()) ;
+                    String uploadedPdfUrl = "" + uriTask.getResult();
 
-                        //get pdf url
-                        Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                        while (!uriTask.isSuccessful());
-                        String uploadedPdfUrl = ""+uriTask.getResult();
-
-                        //upload to firebase db
-                        uploadPdfInfoToDb(uploadedPdfUrl, timestamp);
-                    }
+                    // העלאה למסד הנתונים של Firebase
+                    uploadPdfInfoToDb(uploadedPdfUrl, timestamp);
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull  Exception e) {
-                        progressDialog.dismiss();
-                        Log.d(TAG, "onFailure: PDF upload failed due to "+e.getMessage());
-                        Toast.makeText(PdfAddActivity.this, "PDF upload failed due to "+e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
+                .addOnFailureListener(e -> {
+                    progressDialog.dismiss();
+                    Toast.makeText(PdfAddActivity.this, "PDF upload failed due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 
     private void uploadPdfInfoToDb(String uploadedPdfUrl, long timestamp) {
-        //Step 3: Upload Pdf info to firebase db
-        Log.d(TAG, "uploadPdfToStorage: uploading Pdf info to firebase db...");
+        // שלב 3: העלאת מידע ה-PDF למסד הנתונים של Firebase
 
         progressDialog.setMessage("Uploading pdf info...");
 
         String uid = firebaseAuth.getUid();
 
-        //setup data to upload
+        // הגדרת נתונים להעלאה
         HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("uid", ""+uid);
-        hashMap.put("id", ""+timestamp);
-        hashMap.put("title", ""+title);
-        hashMap.put("description", ""+description);
-        hashMap.put("categoryId", ""+selectedCategoryId);
-        hashMap.put("url", ""+uploadedPdfUrl);
+        hashMap.put("uid", "" + uid);
+        hashMap.put("id", "" + timestamp);
+        hashMap.put("title", "" + title);
+        hashMap.put("description", "" + description);
+        hashMap.put("categoryId", "" + selectedCategoryId);
+        hashMap.put("url", "" + uploadedPdfUrl);
         hashMap.put("timestamp", timestamp);
         hashMap.put("viewsCount", 0);
         hashMap.put("downloadsCount", 0);
 
-        //db reference: DB > Books
+        // הפנייה למסד הנתונים: DB > Books
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Books");
-        ref.child(""+timestamp)
+        ref.child("" + timestamp)
                 .setValue(hashMap)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        progressDialog.dismiss();
-                        Log.d(TAG, "onSuccess: Successfully uploaded...");
-                        Toast.makeText(PdfAddActivity.this, "Successfully uploaded...", Toast.LENGTH_SHORT).show();
-                    }
+                .addOnSuccessListener(unused -> {
+                    progressDialog.dismiss();
+                    Toast.makeText(PdfAddActivity.this, "Successfully uploaded...", Toast.LENGTH_SHORT).show();
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull  Exception e) {
-                        progressDialog.dismiss();
-                        Log.d(TAG, "onFailure: Failed to upload to db due to "+e.getMessage());
-                        Toast.makeText(PdfAddActivity.this, "Failed to upload to db due to "+e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
+                .addOnFailureListener(e -> {
+                    progressDialog.dismiss();
+                    Toast.makeText(PdfAddActivity.this, "Failed to upload to db due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 
     private void loadPdfCategories() {
-        Log.d(TAG, "loadPdfCategories: Loading pdf categories...");
+        // טעינת קטגוריות ה-PDF
         categoryTitleArrayList = new ArrayList<>();
         categoryIdArrayList = new ArrayList<>();
 
-        //db reference to load categories... db > Categories
+        // הפנייה למסד הנתונים לטעינת קטגוריות
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Categories");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull  DataSnapshot snapshot) {
-                categoryTitleArrayList.clear(); //clear before adding data
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                categoryTitleArrayList.clear(); // ניקוי לפני הוספת נתונים
                 categoryIdArrayList.clear();
-                for (DataSnapshot ds: snapshot.getChildren()){
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    // קבלת id ושם הקטגוריה
+                    String categoryId = "" + ds.child("id").getValue();
+                    String categoryTitle = "" + ds.child("category").getValue();
 
-                    //get id and title of category
-                    String categoryId = ""+ds.child("id").getValue();
-                    String categoryTitle = ""+ds.child("category").getValue();
-
-                    //add to respective arraylists
+                    // הוספה לרשימות המתאימות
                     categoryTitleArrayList.add(categoryTitle);
                     categoryIdArrayList.add(categoryId);
-
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull  DatabaseError error) {
+            public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
-
     }
 
-    //selected category id and category title
+    // קטגוריה שנבחרה ושם הקטגוריה
     private String selectedCategoryId, selectedCategoryTitle;
 
     private void categoryPickDialog() {
-        Log.d(TAG, "categoryPickDialog: showing category pick dialog");
+        // דיאלוג בחירת קטגוריה
 
-        //get string array of categories from arraylist
+        // המרת הרשימה למערך
         String[] categoriesArray = new String[categoryTitleArrayList.size()];
-        for (int i = 0; i< categoryTitleArrayList.size(); i++){
+        for (int i = 0; i < categoryTitleArrayList.size(); i++) {
             categoriesArray[i] = categoryTitleArrayList.get(i);
         }
 
-        //alert dialog
+        // דיאלוג
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Pick Category")
                 .setItems(categoriesArray, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //handle item click
-                        //get clicked item from list
+                        // בחירה בקטגוריה
                         selectedCategoryTitle = categoryTitleArrayList.get(which);
                         selectedCategoryId = categoryIdArrayList.get(which);
-                        //set to category textview
+                        // עדכון TextView של הקטגוריה
                         binding.categoryTv.setText(selectedCategoryTitle);
-
-                        Log.d(TAG, "onClick: Selected Category: "+selectedCategoryId+" "+selectedCategoryTitle);
                     }
                 })
                 .show();
     }
 
     private void pdfPickIntent() {
-        Log.d(TAG, "pdfPickIntent: starting pdf pick intent");
+        // כוונה לבחירת PDF
 
         Intent intent = new Intent();
         intent.setType("application/pdf");
@@ -292,23 +238,16 @@ public class PdfAddActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable  Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_OK){
-            if (requestCode == PDF_PICK_CODE){
-                Log.d(TAG, "onActivityResult: PDF Picked");
-
+        if (resultCode == RESULT_OK) {
+            if (requestCode == PDF_PICK_CODE) {
+                // PDF נבחר
                 pdfUri = data.getData();
-
-                Log.d(TAG, "onActivityResult: URI: "+pdfUri);
-
             }
-        }
-        else {
-            Log.d(TAG, "onActivityResult: cancelled picking pdf");
+        } else {
             Toast.makeText(this, "cancelled picking pdf", Toast.LENGTH_SHORT).show();
         }
-
     }
 }

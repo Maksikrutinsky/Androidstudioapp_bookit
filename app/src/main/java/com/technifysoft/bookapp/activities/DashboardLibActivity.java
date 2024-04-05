@@ -25,12 +25,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.technifysoft.bookapp.R;
 
-
-
 public class DashboardLibActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener {
 
-
-
+    // רכיבי ממשק המשתמש והאותנטיקציה של Firebase
     DrawerLayout drawerLayout;
     BottomNavigationView bottomNavigationView;
     FragmentManager fragmentManager;
@@ -44,14 +41,14 @@ public class DashboardLibActivity extends AppCompatActivity  implements Navigati
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard_lib);
 
-
+        // אתחול Firebase Auth ורכיבי הממשק
         firebaseAuth = FirebaseAuth.getInstance();
         fab = findViewById(R.id.fab);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         drawerLayout = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout,toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -61,65 +58,67 @@ public class DashboardLibActivity extends AppCompatActivity  implements Navigati
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setBackground(null);
 
+        // טיפול בבחירות מהתפריט התחתון
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int itemId = item.getItemId();
-                if (itemId == R.id.bottom_exit){
-                    firebaseAuth.signOut();
-                    checkUser();
-                } else if (itemId == R.id.bottom_short){
-                    openFragment(new HomeFragment());
-                    return true;
-                } else if (itemId == R.id.bottom_subscription){
-                    openFragment(new HomeFragment());
-                    return true;
-                } else if (itemId == R.id.bottom_home){
-                    startActivity(new Intent(DashboardLibActivity.this, DashboardUserActivity.class));
-                    finish();
+                switch (itemId) {
+                    case R.id.bottom_exit:
+                        firebaseAuth.signOut();
+                        checkUser();
+                        break;
+                    case R.id.bottom_short:
+                    case R.id.bottom_subscription:
+                        openFragment(new HomeFragment());
+                        return true;
+                    case R.id.bottom_home:
+                        startActivity(new Intent(DashboardLibActivity.this, DashboardUserActivity.class));
+                        finish();
+                        break;
                 }
                 return false;
             }
         });
 
-
-
         fragmentManager = getSupportFragmentManager();
         openFragment(new HomeFragment());
 
-
+        // כפתור פעולה מהירה לפתיחת הפרופיל
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(DashboardLibActivity.this,ProfileActivity.class));
+                startActivity(new Intent(DashboardLibActivity.this, ProfileActivity.class));
                 Toast.makeText(DashboardLibActivity.this, "Profile", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-
+    // בדיקת מצב המשתמש
     private void checkUser() {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-        if(firebaseUser == null){
+        if (firebaseUser == null) {
             startActivity(new Intent(this, MainActivity.class));
             finish();
         }
     }
 
-
+    // טיפול בבחירות מתפריט הניווט
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
-        if (itemId == R.id.nav_addBook){
-            Toast.makeText(this, "סתם משהו של ספרן", Toast.LENGTH_SHORT).show();
-        } else if( itemId == R.id.nav_LibNav1) {
-            Toast.makeText(this, "סתם משהו של ספרן", Toast.LENGTH_SHORT).show();
+        switch (itemId) {
+            case R.id.nav_addBook:
+            case R.id.nav_LibNav1:
+                Toast.makeText(this, "סתם משהו של ספרן", Toast.LENGTH_SHORT).show();
+                break;
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
 
+    // טיפול בלחיצה על כפתור החזור
     @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -129,12 +128,10 @@ public class DashboardLibActivity extends AppCompatActivity  implements Navigati
         }
     }
 
-    private void openFragment(Fragment fragment){
+    // פתיחת פרגמנט במסך
+    private void openFragment(Fragment fragment) {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
         transaction.commit();
     }
-
-
-
 }
