@@ -30,7 +30,7 @@
             android:id="@+id/titleTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Books"
+            android:text="ספרים"
             android:layout_marginTop="8dp"
             android:textStyle="bold"
             android:layout_centerHorizontal="true"
@@ -42,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:text="Category"
+            android:text="קטגורייה"
             android:textColor="@color/white"
             android:layout_below="@id/titleTv"/>
 
@@ -60,7 +60,7 @@
         android:background="@color/white"
         android:layout_below="@id/toolbarRl"
         android:padding="10dp"
-        android:hint="Search"
+        android:hint="חיפוש"
         android:textColorHint="@color/gray02"
         android:drawableStart="@drawable/ic_search_gray"
         android:drawablePadding="10dp"

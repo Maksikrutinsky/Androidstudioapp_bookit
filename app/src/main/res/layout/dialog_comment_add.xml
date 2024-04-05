@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-condensed"
         android:padding="5dp"
-        android:text="Add Comment"
+        android:text="הוסף תגובה"
         android:textAlignment="center"
         android:textColor="@color/design_default_color_primary"
         android:textSize="16sp"
@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/backBtn"
         android:layout_marginTop="20dp"
-        android:hint="Comment"
+        android:hint="תגובה"
         app:startIconDrawable="@drawable/ic_comment_black">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -56,7 +56,7 @@
         android:layout_below="@id/commentTil"
         android:layout_marginTop="20dp"
         android:background="@drawable/shape_button01"
-        android:text="Submit"
+        android:text="שלח"
         android:textColor="@color/white"/>
 
 </RelativeLayout>

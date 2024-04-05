@@ -40,7 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toStartOf="@id/moreBtn"
-            android:text="Book Title"
+            android:text="כותרת הספר"
             android:layout_toEndOf="@id/pdfRl"
             android:maxLines="1"/>
 
@@ -49,7 +49,7 @@
             style="@style/TextAppearance.MaterialComponents.Body2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Book Description"
+            android:text="תיאור הספר"
             android:layout_toEndOf="@id/pdfRl"
             android:layout_marginTop="8dp"
             android:layout_below="@id/titleTv"
@@ -61,7 +61,7 @@
             style="@style/TextAppearance.MaterialComponents.Caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Category"
+            android:text="קטגוריה"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:maxLines="1"/>

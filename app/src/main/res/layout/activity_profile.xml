@@ -34,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="Profile"
+            android:text="פרופיל"
             android:textColor="@color/white"
             android:textStyle="bold" />
 
@@ -74,7 +74,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/profileIv"
         android:layout_marginTop="8dp"
-        android:text="Full Name"
+        android:text="שם"
         android:layout_centerHorizontal="true"
         android:textColor="@color/black"
         android:textSize="18sp"
@@ -109,7 +109,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Account"
+                android:text="משתמש"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:textAlignment="center"
@@ -119,7 +119,7 @@
                 android:id="@+id/accountTypeTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="User"
+                android:text="משתמש"
                 android:textColor="@color/black"
                 android:textAlignment="center"
                 android:textSize="12sp"/>
@@ -137,7 +137,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Member"
+                android:text="משתמש"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:textAlignment="center"
@@ -165,7 +165,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Favorite Books"
+                android:text="ספרים שאהבתי"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:textAlignment="center"
@@ -193,7 +193,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Account Status"
+                android:text="מצב החשבון"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:textAlignment="center"
@@ -203,7 +203,7 @@
                 android:id="@+id/accountStatusTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Not Verified"
+                android:text="לא מואמת"
                 android:textColor="@color/black"
                 android:textAlignment="center"
                 android:textSize="12sp"/>
@@ -225,7 +225,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/view1"
-        android:text="Favorite Books"
+        android:text="ספרים שאהבתי"
         android:padding="5dp"
         android:textColor="@color/black"
         android:textStyle="bold"/>
