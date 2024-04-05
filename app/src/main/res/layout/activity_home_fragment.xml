@@ -26,7 +26,7 @@
         android:id="@+id/textViewToUpdate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Initial Text"
+        android:text="טקסט"
         app:layout_constraintTop_toBottomOf="@+id/image_slider"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

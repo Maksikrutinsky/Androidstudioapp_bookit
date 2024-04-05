@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="Book Details"
+            android:text="פרטי הספר"
             android:textColor="@color/white"
             android:textStyle="bold"/>
 
@@ -82,7 +82,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@id/pdfRl"
-                    android:text="Title of Book"/>
+                    android:text="כותרת הספר"/>
 
                 <!--Table-->
                 <TableLayout
@@ -99,7 +99,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="5dp"
-                            android:text="Category"/>
+                            android:text="קטגורייה"/>
 
                         <TextView
                             android:id="@+id/categoryTv"
@@ -121,7 +121,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="5dp"
-                            android:text="Date"/>
+                            android:text="תאריך"/>
 
                         <TextView
                             android:id="@+id/dateTv"
@@ -143,7 +143,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="5dp"
-                            android:text="Size"/>
+                            android:text="גודל"/>
 
                         <TextView
                             android:id="@+id/sizeTv"
@@ -165,7 +165,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="5dp"
-                            android:text="Views"/>
+                            android:text="צפיות"/>
 
                         <TextView
                             android:id="@+id/viewsTv"
@@ -187,7 +187,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="5dp"
-                            android:text="Downloads"/>
+                            android:text="הורדות"/>
 
                         <TextView
                             android:id="@+id/downloadsTv"
@@ -209,7 +209,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="5dp"
-                            android:text="Pages"/>
+                            android:text="עמודים"/>
 
                         <TextView
                             android:id="@+id/pagesTv"
@@ -232,7 +232,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="The description of the book"
+                android:text="תיאור הספר"
                 android:textColor="@color/black"/>
 
             <View
@@ -253,7 +253,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-condensed"
                     android:padding="5dp"
-                    android:text="Comments"
+                    android:text="תגובות וביקורות"
                     android:textColor="@color/black"
                     android:textSize="16sp"/>
 
@@ -300,7 +300,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:drawableTop="@drawable/ic_book_white"
-            android:text="Read"
+            android:text="קרא"
             android:background="@color/design_default_color_primary"/>
 
         <!--Button: download pdf-->
@@ -310,7 +310,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:drawableTop="@drawable/ic_download_white"
-            android:text="Download"
+            android:text="הורד"
             android:background="@color/design_default_color_primary"/>
 
         <!--Button: Add/Remove Favorite-->
@@ -320,7 +320,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:drawableTop="@drawable/ic_favorite_border_white"
-            android:text="Add Favorite"
+            android:text="אהבתי!"
             android:background="@color/design_default_color_primary"/>
 
     </LinearLayout>
