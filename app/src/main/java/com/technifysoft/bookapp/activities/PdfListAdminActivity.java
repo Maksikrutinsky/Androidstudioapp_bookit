@@ -77,6 +77,7 @@ public class PdfListAdminActivity extends AppCompatActivity {
             }
         });
 
+
         // טיפול בלחיצה, חזרה לפעילות הקודמת
         binding.backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,4 +119,14 @@ public class PdfListAdminActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    public boolean isSearchQueryValid(String query) {
+        return query != null && !query.isEmpty();
+    }
+
+    public boolean isPdfListLoaded(ArrayList<ModelPdf> pdfList) {
+        return pdfList != null && !pdfList.isEmpty();
+    }
+
+
 }

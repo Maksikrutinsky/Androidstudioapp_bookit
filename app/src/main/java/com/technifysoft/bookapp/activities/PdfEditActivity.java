@@ -82,6 +82,28 @@ public class PdfEditActivity extends AppCompatActivity {
 
     }
 
+    // unit test
+    public boolean isTitleValid(String title) {
+        return !TextUtils.isEmpty(title);
+    }
+
+    public boolean isDescriptionValid(String description) {
+        return !TextUtils.isEmpty(description);
+    }
+
+    public boolean isSelectedCategoryValid(String categoryId) {
+        return !TextUtils.isEmpty(categoryId);
+    }
+
+    public boolean isCategoryListValid() {
+        return categoryIdArrayList != null && !categoryIdArrayList.isEmpty();
+    }
+
+    public boolean isCategoryTitleMatch(String categoryTitle) {
+        return categoryTitleArraylist.contains(categoryTitle);
+    }
+
+
     private void loadBookInfo() {
         Log.d(TAG, "loadBookInfo: Loading book info");
 
@@ -235,5 +257,6 @@ public class PdfEditActivity extends AppCompatActivity {
 
             }
         });
+
     }
 }

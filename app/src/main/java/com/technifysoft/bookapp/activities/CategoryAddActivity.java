@@ -61,6 +61,12 @@ public class CategoryAddActivity extends AppCompatActivity {
         });
     }
 
+    // unit test
+    // פונקציה לבדיקת קטגוריה תקינה
+    public boolean isCategoryValid(String category) {
+        return !TextUtils.isEmpty(category); // בודק אם השם אינו ריק
+    }
+
     // משתנה לשמירת שם הקטגוריה
     private String category = "";
 

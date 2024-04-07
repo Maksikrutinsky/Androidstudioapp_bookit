@@ -99,6 +99,16 @@ public class ProfileEditActivity extends AppCompatActivity {
 
     }
 
+    // unit test
+    public boolean isNameValid(String name) {
+        return !TextUtils.isEmpty(name);
+    }
+
+    public boolean isImageUriValid(Uri uri) {
+        return uri != null;
+    }
+
+
     private void loadUserInfo() {
         Log.d(TAG, "loadUserInfo: Loading user info of user " + firebaseAuth.getUid());
 

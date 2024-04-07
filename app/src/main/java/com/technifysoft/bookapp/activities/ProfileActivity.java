@@ -7,7 +7,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -205,6 +207,19 @@ public class ProfileActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    public boolean isNameValid(String name) {
+        return !TextUtils.isEmpty(name);
+    }
+
+    public boolean isUriValid(Uri uri) {
+        return uri != null;
+    }
+
+    public boolean isEmailVerified() {
+        return true;
+    }
+
 
     private void loadFavoriteBooks(){
         // אתחול הרשימה

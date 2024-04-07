@@ -65,6 +65,27 @@ public class RegisterActivity extends AppCompatActivity {
     // משתנים לשמירת נתונים
     private String name = "", email = "", password = "";
 
+
+    // פונקציה לבדיקת שם תקין
+    public boolean isNameValid(String name) {
+        return !TextUtils.isEmpty(name);
+    }
+
+    // פונקציה לבדיקת אימייל תקין
+    public boolean isEmailValid(String email) {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    // פונקציה לבדיקת סיסמה תקינה (אורך)
+    public boolean isPasswordValid(String password) {
+        return password.length() >= 6;
+    }
+
+    // פונקציה לבדיקת התאמת סיסמאות
+    public boolean doPasswordsMatch(String password, String confirmPassword) {
+        return password.equals(confirmPassword);
+    }
+
     private void validateData() {
         /* לפני יצירת החשבון, בואו נבצע תקינות נתונים */
 

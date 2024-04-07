@@ -55,7 +55,33 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             }
         });
     }
+    // פונקציה לבדיקת אימייל תקין
+    // הפכנו אותה לpublic כדי לאפשר בדיקה
+    public boolean isEmailValid(String email) {
+        return !email.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+    // פונקציה לבדיקת תקינות סיסמה
+    public boolean isPasswordValid(String password) {
+        return password.length() >= 6;
+    }
 
+    // פונקציה לשליחת הודעת איפוס סיסמה
+    // מוגדרת כpublic כדי לאפשר Mocking ובדיקה
+    public void sendPasswordResetEmail(String email) {
+        // הגדרת התקדמות ושליחת אימייל
+        progressDialog.setMessage("שולח הוראות לשחזור סיסמה " + email);
+        progressDialog.show();
+
+        firebaseAuth.sendPasswordResetEmail(email)
+                .addOnSuccessListener(unused -> {
+                    progressDialog.dismiss();
+                    Toast.makeText(ForgotPasswordActivity.this, "הוראות לאיפוס סיסמה נשלחו אליך " + email, Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    progressDialog.dismiss();
+                    Toast.makeText(ForgotPasswordActivity.this, "השליחה נכשלה עקב " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
     private String email = "";
     private void validateData() {
         // קבלת הנתונים, כלומר האימייל
@@ -97,4 +123,5 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                     }
                 });
     }
+
 }

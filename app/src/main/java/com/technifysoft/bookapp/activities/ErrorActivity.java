@@ -32,6 +32,12 @@ public class ErrorActivity extends AppCompatActivity {
         });
     }
 
+    // unit test
+    // פונקציית עזר לבדיקת תקינות כתובת אימייל
+    public boolean isEmailValid(String email) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
     // פונקציה לדיווח על בעיות
     private void reportProblem() {
         // כתובת האימייל לדיווח

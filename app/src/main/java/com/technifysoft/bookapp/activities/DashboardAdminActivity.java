@@ -105,6 +105,15 @@ public class DashboardAdminActivity extends AppCompatActivity {
         });
     }
 
+    public static boolean isEmailValid(String email) {
+        return email != null && !email.isEmpty() && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    public static boolean isPasswordValid(String password) {
+        return password != null && !password.isEmpty() && password.length() >= 6;
+    }
+
+
     private void loadCategories() {
         // אתחול רשימת הקטגוריות
         categoryArrayList = new ArrayList<>();

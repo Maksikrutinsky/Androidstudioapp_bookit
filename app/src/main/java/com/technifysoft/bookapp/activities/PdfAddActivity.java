@@ -85,6 +85,23 @@ public class PdfAddActivity extends AppCompatActivity {
 
     private String title = "", description = "";
 
+    //unit test
+    public boolean isTitleValid(String title) {
+        return !TextUtils.isEmpty(title);
+    }
+
+    public boolean isDescriptionValid(String description) {
+        return !TextUtils.isEmpty(description);
+    }
+
+    public boolean isSelectedCategoryValid(String category) {
+        return !TextUtils.isEmpty(category);
+    }
+
+    public boolean isPdfSelected(Uri pdfUri) {
+        return pdfUri != null;
+    }
+
     private void validateData() {
         // שלב 1: אימות נתונים
 

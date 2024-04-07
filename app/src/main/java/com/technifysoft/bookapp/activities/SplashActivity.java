@@ -68,6 +68,9 @@ public class SplashActivity extends AppCompatActivity {
                                 // זהו ספרן, לפתוח לוח המחוונים של הספרן
                                 startActivity(new Intent(SplashActivity.this, DashboardLibActivity.class));
                             }
+                            else{
+                                startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                            }
                         }
 
                         @Override

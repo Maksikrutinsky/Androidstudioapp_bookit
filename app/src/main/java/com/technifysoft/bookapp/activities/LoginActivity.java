@@ -53,6 +53,16 @@ public class LoginActivity extends AppCompatActivity {
         binding.forgotTv.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, ForgotPasswordActivity.class)));
     }
 
+    // פונקציה לבדיקת אימייל תקין
+    public boolean isEmailValid(String email) {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    // פונקציה לבדיקת סיסמה תקינה
+    public boolean isPasswordValid(String password) {
+        return password.length() >= 6; // לדוגמה: בדיקת אורך מינימלי
+    }
+
     private String email = "", password = "";
 
     private void validateData() {

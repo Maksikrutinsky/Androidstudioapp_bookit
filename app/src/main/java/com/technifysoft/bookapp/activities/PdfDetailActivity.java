@@ -163,7 +163,6 @@ public class PdfDetailActivity extends AppCompatActivity {
             }
         });
 
-
         // התנהגות לחיצה על כפתור הוספת תגובה
         binding.addCommentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -212,6 +211,20 @@ public class PdfDetailActivity extends AppCompatActivity {
     }
 
     private String comment = "";
+
+    //unit test
+    public boolean isStringValid(String str) {
+        return str != null && !TextUtils.isEmpty(str);
+    }
+
+    public boolean isUriValid(Uri uri) {
+        return uri != null;
+    }
+
+    public boolean isListNotEmpty(ArrayList<?> list) {
+        return list != null && !list.isEmpty();
+    }
+
 
     // הצגת תיבת דיאלוג להוספת תגובה
     private void addCommentDialog() {
