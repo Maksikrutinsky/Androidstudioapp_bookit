@@ -36,7 +36,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
         // הגדרה ואתחול של דיאלוג התקדמות
         progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Please wait");
+        progressDialog.setTitle("המתן בבקשה");
         progressDialog.setCanceledOnTouchOutside(false);
 
         // טיפול בלחיצה, חזרה אחורה
@@ -63,10 +63,10 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
         // אימות הנתונים, צריך להיות מלא ובפורמט חוקי
         if (email.isEmpty()){
-            Toast.makeText(this, "Enter Email...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "הזן אימייל...", Toast.LENGTH_SHORT).show();
         }
         else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-            Toast.makeText(this, "Invalid email format...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "פורמט דוא\"ל לא חוקי...", Toast.LENGTH_SHORT).show();
         }
         else {
             recoverPassword();
@@ -75,7 +75,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
     private void recoverPassword() {
         // הצגת התקדמות
-        progressDialog.setMessage("Sending password recovery instructions to " + email);
+        progressDialog.setMessage("שולח הוראות לשחזור סיסמה  " + email);
         progressDialog.show();
 
         // התחלת השחזור
@@ -85,7 +85,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                     public void onSuccess(Void unused) {
                         // הודעת הצלחה
                         progressDialog.dismiss();
-                        Toast.makeText(ForgotPasswordActivity.this, "Instructions to reset password sent to " + email, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ForgotPasswordActivity.this, "הוראות לאיפוס סיסמה נשלחו אליך " + email, Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -93,7 +93,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                     public void onFailure(@NonNull Exception e) {
                         // הודעת כישלון
                         progressDialog.dismiss();
-                        Toast.makeText(ForgotPasswordActivity.this, "Failed to send due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ForgotPasswordActivity.this, "השליחה נכשלה עקב " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }

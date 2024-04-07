@@ -24,6 +24,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.technifysoft.bookapp.R;
+import com.technifysoft.bookapp.Terms_ofUseActivity;
 
 public class DashboardLibActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -69,12 +70,13 @@ public class DashboardLibActivity extends AppCompatActivity  implements Navigati
                         checkUser();
                         break;
                     case R.id.bottom_short:
+                        startActivity(new Intent(DashboardLibActivity.this, Terms_ofUseActivity.class));
+                        break;
                     case R.id.bottom_subscription:
-                        openFragment(new HomeFragment());
-                        return true;
+                        startActivity(new Intent(DashboardLibActivity.this, dashboard_userActivity.class));
+                        break;
                     case R.id.bottom_home:
-                        startActivity(new Intent(DashboardLibActivity.this, DashboardUserActivity.class));
-                        finish();
+                        startActivity(new Intent(DashboardLibActivity.this, DashboardUsermainActivity.class));
                         break;
                 }
                 return false;
@@ -109,8 +111,18 @@ public class DashboardLibActivity extends AppCompatActivity  implements Navigati
         int itemId = item.getItemId();
         switch (itemId) {
             case R.id.nav_addBook:
+                startActivity(new Intent(DashboardLibActivity.this, PdfAddActivity.class));
+                break;
             case R.id.nav_LibNav1:
-                Toast.makeText(this, "סתם משהו של ספרן", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(DashboardLibActivity.this, dashboard_userActivity.class));
+                break;
+            case R.id.nav_LibNav2:
+                startActivity(new Intent(DashboardLibActivity.this, Terms_ofUseActivity.class));
+            case R.id.nav_LibNav3:
+                startActivity(new Intent(DashboardLibActivity.this, CategoryAddActivity.class));
+                break;
+            case R.id.nav_LibNav4:
+                startActivity(new Intent(DashboardLibActivity.this, DashboardAdminActivity.class));
                 break;
         }
 

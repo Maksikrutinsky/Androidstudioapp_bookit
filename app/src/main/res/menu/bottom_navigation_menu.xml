@@ -8,7 +8,7 @@
 
     <item
         android:id="@+id/bottom_short"
-        android:title="השאלות שלי"
+        android:title="תנאי שימוש"
         android:icon="@drawable/ic_baseline_home_24"/>
 
     <item

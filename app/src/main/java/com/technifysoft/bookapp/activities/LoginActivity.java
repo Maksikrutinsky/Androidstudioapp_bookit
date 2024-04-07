@@ -7,12 +7,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
-import android.view.View;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -109,7 +105,7 @@ public class LoginActivity extends AppCompatActivity {
                         // בדיקת סוג המשתמש ומעבר למסך המתאים
                         switch (userType) {
                             case "user":
-                                startActivity(new Intent(LoginActivity.this, DashboardUserActivity.class));
+                                startActivity(new Intent(LoginActivity.this, DashboardUsermainActivity.class));
                                 finish();
                                 break;
                             case "admin":

@@ -47,8 +47,9 @@ import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.technifysoft.bookapp.BooksUserFragment;
 import com.technifysoft.bookapp.R;
-
+import com.technifysoft.bookapp.Terms_ofUseActivity;
 
 
 public class HomescreenActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -93,17 +94,21 @@ public class HomescreenActivity extends AppCompatActivity implements NavigationV
                         checkUser();
                         break;
                     case R.id.bottom_short:
+                        startActivity(new Intent(HomescreenActivity.this, Terms_ofUseActivity.class));
+                        break;
                     case R.id.bottom_subscription:
-                        openFragment(new HomeFragment());
-                        return true;
+                        startActivity(new Intent(HomescreenActivity.this, dashboard_userActivity.class));
+                        break;
                     case R.id.bottom_home:
                         startActivity(new Intent(HomescreenActivity.this, HomescreenActivity.class));
-                        finish();
                         break;
                 }
                 return false;
             }
         });
+
+
+
 
         fragmentManager = getSupportFragmentManager();
         openFragment(new HomeFragment());
@@ -126,16 +131,19 @@ public class HomescreenActivity extends AppCompatActivity implements NavigationV
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.nav_addBook:
+            case R.id.nav_adminNav:
                 startActivity(new Intent(HomescreenActivity.this, DashboardAdminActivity.class));
-                finish();
                 break;
             case R.id.nav_adminNav1:
-                // הוספת דף
+                startActivity(new Intent(HomescreenActivity.this, CategoryAddActivity.class));
                 break;
             case R.id.nav_adminNav2:
-                // הוספת דף
+                startActivity(new Intent(HomescreenActivity.this, PdfAddActivity.class));
                 break;
+            case R.id.nav_adminNav3:
+                startActivity(new Intent(HomescreenActivity.this, Terms_ofUseActivity.class));
+                break;
+
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);

@@ -40,7 +40,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:fontFamily="sans-serif-condensed"
-            android:text="Edit Book Info"
+            android:text="ערוך מידע על הספר"
             android:textColor="@color/white"
             android:textSize="28sp"/>
 
@@ -73,7 +73,7 @@
                     android:background="@drawable/shape_edittext01"
                     android:drawableStart="@drawable/ic_pdf_gray"
                     android:drawablePadding="10dp"
-                    android:hint="Book Title"
+                    android:hint="כותרת ספר"
                     android:inputType="textPersonName|textCapSentences"
                     android:padding="10dp"
                     android:textColor="@color/black"
@@ -102,7 +102,7 @@
                     android:background="@drawable/shape_edittext01"
                     android:drawableStart="@drawable/ic_pdf_gray"
                     android:drawablePadding="10dp"
-                    android:hint="Book Description"
+                    android:hint="תיאור ספר"
                     android:gravity="top"
                     android:inputType="textMultiLine|textCapSentences"
                     android:padding="10dp"
@@ -126,7 +126,7 @@
                 android:drawableEnd="@drawable/ic_down_gray"
                 android:drawablePadding="10dp"
                 android:gravity="center_vertical"
-                android:hint="Book Category"
+                android:hint="'קטגוריית ספר'"
                 android:padding="10dp"
                 android:textColor="@color/black"
                 android:textColorHint="@color/gray01"
@@ -141,7 +141,7 @@
                 android:layout_marginEnd="30dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/shape_button01"
-                android:text="Update"
+                android:text="עדכון"
                 android:layout_below="@id/categoryTv"
                 android:textColor="@color/white"/>
 

@@ -12,6 +12,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -47,6 +49,7 @@ public class PdfDetailActivity extends AppCompatActivity {
 
     // מזהה הספר, מתקבל מהintent
     String bookId, bookTitle, bookUrl;
+
 
     // האם הספר ברשימת המועדפים שלי
     boolean isInMyFavorite = false;
@@ -151,6 +154,15 @@ public class PdfDetailActivity extends AppCompatActivity {
                 }
             }
         });
+
+
+        binding.emailLib.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendEmailToGal();
+            }
+        });
+
 
         // התנהגות לחיצה על כפתור הוספת תגובה
         binding.addCommentBtn.setOnClickListener(new View.OnClickListener() {
@@ -357,12 +369,12 @@ public class PdfDetailActivity extends AppCompatActivity {
                         if (isInMyFavorite){
                             // אם קיים במועדפים
                             binding.favoriteBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_favorite_white, 0, 0);
-                            binding.favoriteBtn.setText("Remove Favorite");
+                            binding.favoriteBtn.setText("הסר מהמועדפים");
                         }
                         else {
                             // אם לא קיים במועדפים
                             binding.favoriteBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_favorite_border_white, 0, 0);
-                            binding.favoriteBtn.setText("Add Favorite");
+                            binding.favoriteBtn.setText("הוסף למועדפים");
                         }
 
                     }
@@ -374,4 +386,68 @@ public class PdfDetailActivity extends AppCompatActivity {
                 });
 
     }
+
+    private void sendEmailToGal() {
+        // קריאת נתוני המשתמש
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            Toast.makeText(this, "אתה לא מחובר למשתמש", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users").child(currentUser.getUid());
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot userSnapshot) {
+                if (userSnapshot.exists()) {
+                    // קריאת נתוני המשתמש
+                    String userEmail = userSnapshot.child("email").getValue(String.class);
+                    String username = userSnapshot.child("name").getValue(String.class);
+
+                    // קריאת נתוני הספר
+                    DatabaseReference bookRef = FirebaseDatabase.getInstance().getReference("Books").child(bookId);
+                    bookRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot bookSnapshot) {
+                            if (bookSnapshot.exists()) {
+                                // קריאת נתוני הספר
+                                String bookTitle = bookSnapshot.child("title").getValue(String.class);
+                                String bookDescription = bookSnapshot.child("description").getValue(String.class);
+
+                                // בניית תוכן ההודעה
+                                String subject = "בקשה לספר: " + bookTitle;
+                                String message = "המשתמש " + username + " (" + userEmail + ") + מעוניין בספר:\n" + "כותרת: " + bookTitle + "\n" + "תיאור: " + bookDescription;
+
+                                // שליחת הודעת הדוא"ל ישירות למייל שנקבע
+                                sendEmail("noamkadosh4444@gmail.com", subject, message);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            // התעלמות מהשגיאה או טיפול בה
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // התעלמות מהשגיאה או טיפול בה
+            }
+        });
+    }
+
+    // פונקציה לשליחת הודעת דוא"ל
+// פונקציה לשליחת הודעת דוא"ל
+    private void sendEmail(String recipientEmail, String subject, String message) {
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        emailIntent.setType("plain/text");
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] { recipientEmail });
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        emailIntent.putExtra(Intent.EXTRA_TEXT, message);
+        startActivity(Intent.createChooser(emailIntent, "Choose an email client:"));
+    }
+
+
 }

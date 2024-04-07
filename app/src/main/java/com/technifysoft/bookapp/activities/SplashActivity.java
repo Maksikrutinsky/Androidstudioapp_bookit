@@ -44,7 +44,7 @@ public class SplashActivity extends AppCompatActivity {
             // משתמש לא מחובר
             // התחל מסך ראשי
             startActivity(new Intent(SplashActivity.this, MainActivity.class));
-            finish(); // סיום פעילות זו
+             // סיום פעילות זו
         }
         else {
             // המשתמש מחובר - לבדוק את סוג המשתמש, כמו שנעשה במסך התחברות
@@ -58,13 +58,15 @@ public class SplashActivity extends AppCompatActivity {
                             // לבדוק את סוג המשתמש
                             if (userType.equals("user")){
                                 // זהו משתמש רגיל, לפתוח לוח המחוונים של המשתמש
-                                startActivity(new Intent(SplashActivity.this, DashboardUserActivity.class));
-                                finish();
+                                startActivity(new Intent(SplashActivity.this, DashboardUsermainActivity.class));
                             }
                             else if (userType.equals("admin")){
                                 // זהו מנהל, לפתוח לוח המחוונים של המנהל
-                                startActivity(new Intent(SplashActivity.this, DashboardAdminActivity.class));
-                                finish();
+                                startActivity(new Intent(SplashActivity.this, HomescreenActivity.class));
+                            }
+                            else if (userType.equals("lib")){
+                                // זהו ספרן, לפתוח לוח המחוונים של הספרן
+                                startActivity(new Intent(SplashActivity.this, DashboardLibActivity.class));
                             }
                         }
 

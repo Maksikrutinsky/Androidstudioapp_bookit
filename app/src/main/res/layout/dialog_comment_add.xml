@@ -17,19 +17,23 @@
         android:tint="@color/black"/>
 
     <!--TextView: dialog title-->
+
+    <!--TextInnputLayout: input comment-->
     <TextView
         android:id="@+id/titleTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp"
         android:fontFamily="sans-serif-condensed"
         android:padding="5dp"
         android:text="הוסף תגובה"
         android:textAlignment="center"
         android:textColor="@color/design_default_color_primary"
         android:textSize="16sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
-    <!--TextInnputLayout: input comment-->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/commentTil"
         android:layout_width="match_parent"

@@ -66,6 +66,30 @@
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </RelativeLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp">
+
+
+
+        <TextView
+            android:id="@+id/titleTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="20dp"
+            android:text="librarian"
+            android:textStyle="bold"
+            android:textColor="@color/Brown"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"/>
+
+    </RelativeLayout>
+
+
+
+
     <com.google.android.material.navigation.NavigationView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"

@@ -1,6 +1,7 @@
 package com.technifysoft.bookapp.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,9 +23,16 @@ import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.technifysoft.bookapp.BooksUserFragment;
 import com.technifysoft.bookapp.R;
+import com.technifysoft.bookapp.Terms_ofUseActivity;
 
-public class DashboardUserActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener {
+public class DashboardUsermainActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener {
 
     // הגדרת משתנים לרכיבי הממשק ואותנטיקציה
     DrawerLayout drawerLayout;
@@ -37,7 +45,7 @@ public class DashboardUserActivity extends AppCompatActivity  implements Navigat
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dashboard_user);
+        setContentView(R.layout.activity_dashboard_usermain);
 
         // אתחול Firebase Auth וקישור רכיבי הממשק
         firebaseAuth = FirebaseAuth.getInstance();
@@ -66,11 +74,13 @@ public class DashboardUserActivity extends AppCompatActivity  implements Navigat
                         checkUser();
                         break;
                     case R.id.bottom_short:
+                        startActivity(new Intent(DashboardUsermainActivity.this, Terms_ofUseActivity.class));
+                        break;
                     case R.id.bottom_subscription:
-                        openFragment(new HomeFragment());
-                        return true;
+                        startActivity(new Intent(DashboardUsermainActivity.this, dashboard_userActivity.class));
+                        break;
                     case R.id.bottom_home:
-                        startActivity(new Intent(DashboardUserActivity.this, DashboardUserActivity.class));
+                        startActivity(new Intent(DashboardUsermainActivity.this, DashboardUsermainActivity.class));
                         finish();
                         break;
                 }
@@ -85,8 +95,8 @@ public class DashboardUserActivity extends AppCompatActivity  implements Navigat
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(DashboardUserActivity.this, ProfileActivity.class));
-                Toast.makeText(DashboardUserActivity.this, "Profile", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(DashboardUsermainActivity.this, ProfileActivity.class));
+                Toast.makeText(DashboardUsermainActivity.this, "Profile", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -105,20 +115,61 @@ public class DashboardUserActivity extends AppCompatActivity  implements Navigat
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_trending:
-                Toast.makeText(this, "דף תנאי שימוש", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(DashboardUsermainActivity.this, Terms_ofUseActivity.class));
                 break;
             case R.id.nav_searchBook:
-                Toast.makeText(this, "חיפוש ספרים", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "חיפוש ספרים", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(DashboardUsermainActivity.this, dashboard_userActivity.class));
                 break;
             case R.id.nav_Reporting:
-                startActivity(new Intent(this, ErrorActivity.class));
-                finish();
+                    reportProblem();
                 break;
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    private void reportProblem() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            Toast.makeText(this, "אתה לא מחובר למשתמש", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users").child(currentUser.getUid());
+
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    String userEmail = snapshot.child("email").getValue(String.class);
+                    String username = snapshot.child("name").getValue(String.class);
+                // נושא ההודעה
+                String subject =  "דיווח תקלות ";
+                String message =" שלום " + username + "\n"+ "איזה תקלה נתקלת באפלקציה?";
+                sendEmail("noamkadosh4444@gmail.com", subject, message);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+    }
+
+    private void sendEmail(String recipientEmail, String subject, String message) {
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        emailIntent.setType("plain/text");
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] { recipientEmail });
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        emailIntent.putExtra(Intent.EXTRA_TEXT, message);
+        startActivity(Intent.createChooser(emailIntent, "Choose an email client:"));
+    }
+
+
+
 
     // טיפול בלחיצת חזור
     @Override
@@ -136,4 +187,11 @@ public class DashboardUserActivity extends AppCompatActivity  implements Navigat
         transaction.replace(R.id.fragment_container, fragment);
         transaction.commit();
     }
+
+
+
+
+
+
+
 }

@@ -102,7 +102,7 @@ public class CategoryAddActivity extends AppCompatActivity {
                     public void onSuccess(Void unused) {
                         // הוספת הקטגוריה הסתיימה בהצלחה
                         progressDialog.dismiss();
-                        Toast.makeText(CategoryAddActivity.this, "Category added successfully...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CategoryAddActivity.this, "הקטגוריה נוספה בהצלחה...", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

@@ -35,17 +35,21 @@
         android:textColor="@color/black"
         android:textSize="16sp" />
 
+
+
+
     <Button
-    android:id="@+id/loginBtn"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_alignParentEnd="true"
-    android:layout_alignParentBottom="true"
-    android:layout_marginEnd="20dp"
-    android:layout_marginBottom="5dp"
-    android:background="@drawable/shape_button01"
-    android:text="התחבר כעת"
-    android:textColor="@color/white" />
+        android:id="@+id/loginBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/shape_button01"
+        android:text="התחבר כעת"
+        android:textColor="@color/white" />
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -53,7 +57,8 @@
         android:layout_above="@id/loginBtn"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="5dp"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
 
         <TextView
             android:layout_width="wrap_content"
@@ -63,14 +68,13 @@
             android:textSize="16sp" />
 
         <TextView
-            android:layout_marginLeft="20dp"
-            android:id="@+id/regTV2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
+            android:id="@+id/regTV2"
             android:text="לחץ כאן להרשמה"
-            android:textColor="@color/black"
+            android:textColor="@color/purple_700"
             android:textSize="16sp" />
+
     </LinearLayout>
 
 </RelativeLayout>

@@ -8,17 +8,22 @@
         android:checkableBehavior="single">
 
         <item
-            android:id="@+id/nav_addBook"
+            android:id="@+id/nav_adminNav"
             android:icon="@drawable/ic_baseline_home_24"
-            android:title="הוספת ספר"/>
+            android:title="חיפוש קטגוריה"/>
 
         <item
             android:id="@+id/nav_adminNav1"
             android:icon="@drawable/ic_baseline_home_24"
-            android:title="חיפוש ספר"/>
+            android:title="הוספת קטגוריה"/>
 
         <item
             android:id="@+id/nav_adminNav2"
+            android:icon="@drawable/ic_baseline_home_24"
+            android:title="הוספת ספר"/>
+
+        <item
+            android:id="@+id/nav_adminNav3"
             android:icon="@drawable/ic_baseline_home_24"
             android:title="תנאי שימוש"/>
 

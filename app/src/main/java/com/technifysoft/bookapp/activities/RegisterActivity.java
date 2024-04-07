@@ -154,7 +154,7 @@ public class RegisterActivity extends AppCompatActivity {
                         progressDialog.dismiss();
                         Toast.makeText(RegisterActivity.this, "Account created...", Toast.LENGTH_SHORT).show();
                         // מאחר והחשבון של המשתמש נוצר כעת נתחיל במסך הלוח של המשתמש
-                        startActivity(new Intent(RegisterActivity.this, DashboardUserActivity.class));
+                        startActivity(new Intent(RegisterActivity.this, DashboardUsermainActivity.class));
                         finish();
                     }
                 })

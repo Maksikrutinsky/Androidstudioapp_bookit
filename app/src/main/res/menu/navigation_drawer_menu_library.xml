@@ -18,9 +18,21 @@
             android:title="חיפוש ספר"/>
 
         <item
+            android:id="@+id/nav_LibNav3"
+            android:icon="@drawable/ic_baseline_home_24"
+            android:title="הוספת קטגוריה"/>
+
+        <item
+            android:id="@+id/nav_LibNav4"
+            android:icon="@drawable/ic_baseline_home_24"
+            android:title="צפייה בקטגוריות"/>
+
+        <item
             android:id="@+id/nav_LibNav2"
             android:icon="@drawable/ic_baseline_home_24"
-            android:title="הוספת ספר"/>
+            android:title="תנאי שימוש"/>
+
+
 
 
 
