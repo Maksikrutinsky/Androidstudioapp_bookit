@@ -77,7 +77,7 @@ public class CategoryAddActivity extends AppCompatActivity {
         category = binding.categoryEt.getText().toString().trim();
         // אימות שהשדה אינו ריק
         if (TextUtils.isEmpty(category)){
-            Toast.makeText(this, "Please enter category...!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "נא להכניס לקטגוריה...!", Toast.LENGTH_SHORT).show();
         }
         else {
             addCategoryFirebase();
@@ -86,7 +86,7 @@ public class CategoryAddActivity extends AppCompatActivity {
 
     private void addCategoryFirebase() {
         // הצגת הודעת התקדמות
-        progressDialog.setMessage("Adding category...");
+        progressDialog.setMessage("מוסיף קטגוריה...");
         progressDialog.show();
 
         // קבלת חותמת זמן

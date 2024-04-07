@@ -74,14 +74,23 @@ public class HomeFragment extends Fragment {
     private void loadImages() {
         final List<SlideModel> remoteimages = new ArrayList<>();
 
-        // שליפת תמונות מ-Firebase והצגתן בסליידר
         FirebaseDatabase.getInstance().getReference().child("Books")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for (DataSnapshot data : dataSnapshot.getChildren())
-                            remoteimages.add(new SlideModel(data.child("url").getValue().toString(), data.child("title").getValue().toString(), ScaleTypes.FIT));
+                        for (DataSnapshot data : dataSnapshot.getChildren()) {
+                            String imageUrl = null;
+                            if (data.child("image").getValue() != null) {
+                                imageUrl = data.child("image").getValue().toString().replace("url:", "");
+                            }
+                            String pdfUrl = data.child("url").getValue().toString();
+                            String title = data.child("title").getValue().toString();
 
+                            // Check if imageUrl is null before using it
+                            if (imageUrl != null) {
+                                remoteimages.add(new SlideModel(imageUrl, title, ScaleTypes.FIT));
+                            }
+                        }
                         imageSlider.setImageList(remoteimages, ScaleTypes.FIT);
                     }
 
@@ -91,4 +100,5 @@ public class HomeFragment extends Fragment {
                     }
                 });
     }
+
 }

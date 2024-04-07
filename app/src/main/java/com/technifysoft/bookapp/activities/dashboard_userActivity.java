@@ -60,7 +60,7 @@ public class dashboard_userActivity extends AppCompatActivity {
             }
         });
 
-        //לחיצה שתפתח את הפרופיל
+        //handle click, open profile
         binding.profileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,23 +75,23 @@ public class dashboard_userActivity extends AppCompatActivity {
         categoryArrayList = new ArrayList<>();
 
         //load categories from firebase
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Categories");
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Categories"); //be careful of spellings
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 //clear before adding to list
                 categoryArrayList.clear();
 
-                /*  קטגוריות עומס - סטטי, למשל. הכל, הכי נצפה וכו..,*/
-                //הוסף נתונים לדגמים
-                ModelCategory modelAll = new ModelCategory("01", "הכל", "", 1);
-                ModelCategory modelMostViewed = new ModelCategory("02", "הכי נצפה", "", 1);
-                ModelCategory modelMostDownloaded = new ModelCategory("03", "רוב ההורדות", "", 1);
+                /*Load Categories - Static e.g. All, Most Viewed, Most Downloaded*/
+                //Add data to models
+                ModelCategory modelAll = new ModelCategory("01", "All", "", 1);
+                ModelCategory modelMostViewed = new ModelCategory("02", "Most Viewed", "", 1);
+                ModelCategory modelMostDownloaded = new ModelCategory("03", "Most Downloaded", "", 1);
                 //add models to list
                 categoryArrayList.add(modelAll);
                 categoryArrayList.add(modelMostViewed);
                 categoryArrayList.add(modelMostDownloaded);
-                //הוסף נתונים כדי להציג את מתאם הביפר
+                //add data to view pager adapter
                 viewPagerAdapter.addFragment(BooksUserFragment.newInstance(
                         ""+modelAll.getId(),
                         ""+modelAll.getCategory(),
@@ -110,18 +110,18 @@ public class dashboard_userActivity extends AppCompatActivity {
                 //refresh list
                 viewPagerAdapter.notifyDataSetChanged();
 
-                //כעת טען מ-firebase
+                //Now Load from firebase
                 for (DataSnapshot ds: snapshot.getChildren()){
                     //get data
                     ModelCategory model = ds.getValue(ModelCategory.class);
-                    //הוספה לרשימה
+                    //add data to list
                     categoryArrayList.add(model);
                     //add data to viewPagerAdapter
                     viewPagerAdapter.addFragment(BooksUserFragment.newInstance(
                             ""+model.getId(),
                             ""+model.getCategory(),
                             ""+model.getUid()), model.getCategory());
-                    //רשימה לרענון
+                    //refresh list
                     viewPagerAdapter.notifyDataSetChanged();
                 }
 
@@ -134,7 +134,7 @@ public class dashboard_userActivity extends AppCompatActivity {
             }
         });
 
-        //הגדר מתאם לצפייה בביפר
+        //set adapter to view pager
         viewPager.setAdapter(viewPagerAdapter);
 
     }
@@ -145,7 +145,7 @@ public class dashboard_userActivity extends AppCompatActivity {
         private ArrayList<String> fragmentTitleList = new ArrayList<>();
         private Context context;
 
-        public ViewPagerAdapter(FragmentManager fm, int behavior, Context context) {
+        public ViewPagerAdapter( FragmentManager fm, int behavior, Context context) {
             super(fm, behavior);
             this.context = context;
         }
@@ -161,9 +161,9 @@ public class dashboard_userActivity extends AppCompatActivity {
         }
 
         private void addFragment(BooksUserFragment fragment, String title){
-            //הוסף fragment שהועבר כפרמטר ב-fragmentList
+            //add fragment passed as parameter in fragmentList
             fragmentList.add(fragment);
-            //הוסף כותרת שהועבר כפרמטר ב-fragmentTitleList
+            //add title passed as parameter in fragmentTitleList
             fragmentTitleList.add(title);
         }
 
