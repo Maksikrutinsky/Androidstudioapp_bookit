@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -61,11 +62,13 @@ public class HomescreenActivity extends AppCompatActivity implements NavigationV
     Toolbar toolbar;
     FloatingActionButton fab;
     private FirebaseAuth firebaseAuth;
+    TextView textViewToUpdateS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homescreen);
+
 
         // אתחול Firebase Auth ורכיבי הממשק
         firebaseAuth = FirebaseAuth.getInstance();
@@ -83,6 +86,8 @@ public class HomescreenActivity extends AppCompatActivity implements NavigationV
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setBackground(null);
+
+
 
         // טיפול בבחירה מתוך התפריט התחתון
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {

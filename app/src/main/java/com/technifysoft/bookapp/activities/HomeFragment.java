@@ -19,6 +19,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.technifysoft.bookapp.R;
+import com.technifysoft.bookapp.databinding.ActivityHomescreenBinding;
+import com.technifysoft.bookapp.databinding.ActivityLoginBinding;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,18 +35,44 @@ public class HomeFragment extends Fragment {
 
     // משתנה להצגת השעה
     private TextView textViewTime;
+
     // מטפל בזמנים
     private Handler handler = new Handler();
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
             // מגדיר את הטקסט להיות השעה הנוכחית
-            String currentTime = "היי, הסיפריה תיהיה סגורה היום!  " + new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
-            textViewTime.setText(currentTime);
+            String currentTime = "היי, הספריה תיהיה סגורה היום!  " + new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
+
+            // מוסיף שעות פתיחה של הספריה
+            String openingHours = "שעות פתיחה: א-ה 08:00-20:00, ו' 08:00-14:00";
+
+            // מוסיף מלל של דף הבית
+            String homepageText = "ברוכים הבאים לספריה המרכזית שלנו! אנו מציעים מגוון רחב של ספרים ושירותים לקהל הרחב. תן לנו לשרת אותך בכיף!";
+
+            // מחבר את הטקסטים לטקסט יחיד
+            String finalText = currentTime + "\n\n" + openingHours + "\n\n" + homepageText;
+
+            // מקבל את אורך הטקסט של השעות הפתיחה ושל מלל דף הבית
+            int openingHoursLength = openingHours.length();
+            int homepageTextLength = homepageText.length();
+
+            // מחלק את הטקסט לחלקים
+            String firstPart = finalText.substring(0, finalText.length());
+            String secondPart = homepageText;
+
+            // מחבר את החלקים כדי ליצור את הטקסט הסופי
+            String finalTextWithAlignment = firstPart ;
+
+            textViewTime.setText(finalTextWithAlignment);
+
             // מתזמן לעדכון שוב בעוד שנייה
             handler.postDelayed(this, 1000);
         }
     };
+
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
