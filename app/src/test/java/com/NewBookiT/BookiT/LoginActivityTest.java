@@ -9,7 +9,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import com.NewBookiT.BookiT.activities.LoginActivity;
-
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = {28})
 
