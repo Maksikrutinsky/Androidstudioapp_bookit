@@ -4,12 +4,12 @@ plugins {
 }
 
 android {
-    namespace 'com.technifysoft.bookapp'
+    namespace 'com.NewBookiT.BookiT'
 
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.technifysoft.bookapp"
+        applicationId 'com.NewBookiT.BookiT'
         minSdkVersion 21
         targetSdk 34
         versionCode 1
