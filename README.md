@@ -1,24 +1,20 @@
-BookiT: אפליקציית השאלת ספרים לסטודנטים
-BookiT היא אפליקציה חדשנית בנויה ב-Android Studio בשפת Java, משתמשת ב-Firebase של Google כדי לאפשר לסטודנטים להשאיל ספרים פיזיים מהספריה בלחיצת כפתור. הספרים יחכו לסטודנטים בספריה, מה שיחסוך זמן ויעשה את תהליך ההשאלה יעיל ונוח יותר.
+BookiT is an innovative Android application built with Android Studio (Java) and powered by Google Firebase.
+It allows students to easily borrow physical books from their university library with just one tap.
+The reserved books wait for pickup at the library — saving time and making the borrowing process more efficient and user-friendly.
 
-תכונות
-חיפוש ספרים: הסטודנטים יכולים לחפש ספרים לפי שם.
-השאלת ספרים: אפשרות להשאיל ספר בלחיצת כפתור.
-ממשק נוח וידידותי: ממשק משתמש נקי ופשוט שמקל על תהליך החיפוש וההשאלה.
+Features
+Book Search: Students can search for books by name.
+Book Borrowing: Borrow a book instantly with one click.
+Clean UI: Simple and intuitive design for a smooth user experience..
 
-התקנה
-בכדי להתקין את האפליקציה, עקוב אחר השלבים הבאים:
+Installation
+To set up and run the application:
+Make sure Android Studio is installed on your computer.
+Import the project from GitHub or another source.
+Configure Firebase by adding your google-services.json file to the project directory.
+Build the project and install it on an Android device or emulator..
 
-וודא ש-Android Studio מותקן על מחשבך.
-ייבא את הפרויקט ל-Android Studio מ-GitHub או ממקור אחר.
-הגדר את Firebase על ידי הוספת קובץ google-services.json לתיקיית הפרויקט.
-בנה את הפרויקט ב-Android Studio והתקן את האפליקציה על מכשיר Android או מכשיר וירטואלי.
-
-שימוש
-כדי להתחיל להשתמש באפליקציה, פשוט הפעל אותה על המכשיר שלך, ובצע את השלבים הבאים:
-
-צור חשבון או התחבר עם חשבון קיים.
-זה הכל! אתה זמין לשימוש בכל הפונקצינליות במערכת.
-
-תמיכה
-אם יש לך שאלות או צרך בעזרה, אל תהסס לפנות אלינו דרך [maksikrutinsky@gmail.com].
+Usage
+Launch the app on your Android device.
+Create an account or log in with an existing one.
+You’re ready to browse, borrow, and manage your library books effortlessly!.
